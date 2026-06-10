@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Central de Marketing · Nibo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Poppins', sans-serif; background: #f4f5f7; color: #1a1a2e; height: 100vh; overflow: hidden; }
+    .hub { display: flex; height: 100vh; width: 100%; }
+
+    /* SVG icons */
+    .ico { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .ico svg { width: 1em; height: 1em; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .ico.filled svg { fill: currentColor; stroke: none; }
+    .ico-16 { font-size: 16px; }
+    .ico-18 { font-size: 18px; }
+    .ico-20 { font-size: 20px; }
+    .ico-28 { font-size: 28px; }
+    .ico-30 { font-size: 30px; }
+
+    /* SIDEBAR */
+    .sidebar { width: 240px; min-width: 240px; background: #002D72; display: flex; flex-direction: column; height: 100vh; }
+    .sidebar-logo { padding: 24px 20px 20px; border-bottom: 0.5px solid rgba(255,255,255,0.12); }
+    .sidebar-logo .brand-text { font-size: 22px; font-weight: 600; color: #ffffff; letter-spacing: -0.5px; }
+    .sidebar-logo .brand-sub { font-size: 11px; color: rgba(255,255,255,0.42); margin-top: 3px; }
+    .nav-section { padding: 18px 10px 6px; flex: 1; overflow-y: auto; }
+    .nav-label { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.38); letter-spacing: 1px; text-transform: uppercase; padding: 0 10px; margin-bottom: 6px; display: block; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 400; font-family: 'Poppins', sans-serif; transition: background 0.15s; border: none; background: transparent; width: 100%; text-align: left; color: #ffffff; }
+    .nav-item:hover { background: rgba(255,255,255,0.09); }
+    .nav-item.active { background: rgba(65,182,230,0.18); color: #41B6E6; font-weight: 500; }
+    .nav-item .ico { color: inherit; }
+    .sidebar-footer { padding: 16px 20px; border-top: 0.5px solid rgba(255,255,255,0.08); font-size: 11px; color: rgba(255,255,255,0.28); }
+
+    /* MAIN */
+    .main { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow: hidden; background: #f4f5f7; }
+    .topbar { padding: 18px 28px; border-bottom: 0.5px solid #e2e4e9; background: #ffffff; flex-shrink: 0; }
+    .page-title { font-size: 16px; font-weight: 600; color: #1a1a2e; }
+    .page-subtitle { font-size: 12px; color: #6b7280; margin-top: 2px; }
+    .content { flex: 1; overflow-y: auto; padding: 24px 28px; }
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* INÍCIO */
+    .greeting-title { font-size: 17px; font-weight: 600; color: #1a1a2e; margin-bottom: 3px; }
+    .greeting-sub { font-size: 13px; color: #6b7280; margin-bottom: 20px; }
+    .section-label { font-size: 10px; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.9px; margin-bottom: 10px; }
+    .fav-section { display: none; margin-bottom: 22px; }
+    .fav-section.has-favs { display: block; }
+    .folder-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 12px; margin-bottom: 4px; }
+    .folder-card { background: #ffffff; border: 0.5px solid #e2e4e9; border-radius: 12px; padding: 16px; position: relative; transition: border-color 0.15s; }
+    .folder-card:hover { border-color: #0072CE; }
+    .folder-card.favorited { border-color: #41B6E6; }
+    .fav-btn { position: absolute; top: 12px; right: 12px; background: none; border: none; cursor: pointer; padding: 2px; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #d1d5db; transition: color 0.15s; }
+    .fav-btn:hover { color: #41B6E6; }
+    .folder-card.favorited .fav-btn { color: #41B6E6; }
+    .fc-icon { width: 36px; height: 36px; border-radius: 10px; background: #EBF4FF; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; color: #0072CE; }
+    .fc-tag { font-size: 10px; font-weight: 600; color: #0072CE; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 3px; }
+    .fc-name { font-size: 13px; font-weight: 600; color: #1a1a2e; line-height: 1.3; padding-right: 20px; }
+    .fc-desc { font-size: 11.5px; color: #6b7280; margin-top: 4px; line-height: 1.5; }
+    .fc-btn { margin-top: 12px; width: 100%; padding: 7px 0; font-size: 12px; font-weight: 500; font-family: 'Poppins', sans-serif; color: #0072CE; background: #EBF4FF; border: none; border-radius: 6px; cursor: pointer; transition: background 0.15s; }
+    .fc-btn:hover { background: #B5D4F4; }
+    .dashed-card { border: 0.5px dashed #d1d5db !important; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 148px; gap: 6px; cursor: pointer; }
+    .dashed-card .ico { color: #d1d5db; }
+    .dashed-card span { font-size: 12px; color: #9ca3af; }
+
+    /* CALENDÁRIO */
+    .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .cal-title { font-size: 13px; font-weight: 600; color: #1a1a2e; }
+    .cal-sub { font-size: 12px; color: #6b7280; margin-top: 2px; }
+    .add-form { background: #ffffff; border: 0.5px solid #0072CE; border-radius: 12px; padding: 20px; margin-bottom: 16px; display: none; }
+    .add-form.open { display: block; }
+    .add-form h3 { font-size: 13px; font-weight: 600; color: #1a1a2e; margin-bottom: 16px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+    .form-row.single { grid-template-columns: 1fr; }
+    .add-form label { font-size: 11px; font-weight: 500; color: #6b7280; display: block; margin-bottom: 4px; }
+    .add-form input, .add-form select, .add-form textarea { font-size: 12px; font-family: 'Poppins', sans-serif; padding: 8px 10px; border-radius: 8px; border: 0.5px solid #d1d5db; background: #ffffff; color: #1a1a2e; width: 100%; outline: none; }
+    .add-form input:focus, .add-form select:focus, .add-form textarea:focus { border-color: #0072CE; }
+    .add-form textarea { resize: vertical; min-height: 64px; }
+    .form-actions { display: flex; gap: 8px; margin-top: 14px; }
+    .btn-solid { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; font-family: 'Poppins', sans-serif; padding: 9px 18px; border-radius: 8px; border: none; background: #0072CE; color: #ffffff; cursor: pointer; transition: background 0.15s; }
+    .btn-solid:hover { background: #005bb5; }
+    .btn-cancel { font-size: 12px; font-family: 'Poppins', sans-serif; padding: 9px 14px; border-radius: 8px; border: 0.5px solid #d1d5db; background: transparent; color: #6b7280; cursor: pointer; }
+    .launch-list { display: flex; flex-direction: column; gap: 8px; }
+    .launch-item { background: #ffffff; border: 0.5px solid #e2e4e9; border-radius: 10px; padding: 14px 16px; display: grid; grid-template-columns: 72px 1fr auto; gap: 14px; align-items: center; }
+    .li-date { font-size: 12px; font-weight: 500; color: #6b7280; text-align: center; line-height: 1.3; }
+    .li-day { font-size: 20px; font-weight: 600; color: #1a1a2e; display: block; }
+    .li-title { font-size: 13.5px; font-weight: 600; color: #1a1a2e; }
+    .li-desc { font-size: 12px; color: #6b7280; margin-top: 3px; }
+    .li-link { font-size: 12px; color: #0072CE; display: inline-flex; align-items: center; gap: 4px; margin-top: 6px; text-decoration: none; }
+    .li-link:hover { text-decoration: underline; }
+    .li-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+    .li-delete { background: none; border: none; cursor: pointer; color: #9ca3af; display: flex; transition: color 0.15s; }
+    .li-delete:hover { color: #E24B4A; }
+    .empty-launch { text-align: center; padding: 48px 20px; color: #9ca3af; font-size: 13px; }
+    .empty-launch .ico { color: #d1d5db; margin-bottom: 10px; }
+    .tag { display: inline-block; font-size: 10px; padding: 3px 8px; border-radius: 20px; font-weight: 600; }
+    .tag-blue { background: #EBF4FF; color: #185FA5; }
+    .tag-green { background: #EAF3DE; color: #3B6D11; }
+    .tag-amber { background: #FAEEDA; color: #854F0B; }
+
+    /* SOCIAL */
+    .social-center { text-align: center; padding: 60px 20px; }
+    .social-icon-wrap { width: 60px; height: 60px; border-radius: 16px; background: #EBF4FF; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; color: #0072CE; }
+    .social-center h2 { font-size: 16px; font-weight: 600; color: #1a1a2e; margin-bottom: 8px; }
+    .social-center p { font-size: 13px; color: #6b7280; margin-bottom: 24px; }
+
+    /* LINKS */
+    .link-group { margin-bottom: 22px; }
+    .link-group-title { font-size: 10px; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.9px; margin-bottom: 8px; }
+    .link-wrap { background: #ffffff; border: 0.5px solid #e2e4e9; border-radius: 12px; overflow: hidden; }
+    .link-row { display: flex; align-items: center; gap: 14px; padding: 13px 16px; border-bottom: 0.5px solid #e2e4e9; transition: background 0.12s; }
+    .link-row:hover { background: #f8f9fa; }
+    .link-row:last-child { border-bottom: none; }
+    .link-row .row-ico { color: #0072CE; flex-shrink: 0; }
+    .link-info { flex: 1; }
+    .link-name { font-size: 13px; font-weight: 600; color: #1a1a2e; }
+    .link-desc-text { font-size: 11.5px; color: #6b7280; margin-top: 2px; }
+    a.open-btn { font-size: 12px; font-weight: 500; color: #0072CE; display: inline-flex; align-items: center; gap: 4px; text-decoration: none; white-space: nowrap; padding: 5px 12px; border-radius: 6px; background: #EBF4FF; transition: background 0.15s; }
+    a.open-btn:hover { background: #B5D4F4; }
+    .info-box { margin-top: 12px; padding: 12px 14px; background: #ffffff; border: 0.5px solid #e2e4e9; border-radius: 10px; font-size: 12px; color: #6b7280; line-height: 1.6; display: flex; align-items: flex-start; gap: 8px; }
+    .info-box .ico { color: #0072CE; margin-top: 1px; flex-shrink: 0; }
+  </style>
+</head>
+<body>
+<div class="hub">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <div class="brand-text">nibo</div>
+      <div class="brand-sub">Central de Marketing</div>
+    </div>
+    <div class="nav-section">
+      <span class="nav-label">Menu</span>
+      <button class="nav-item active" onclick="navigate('inicio',this)">
+        <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"/><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"/></svg></span> Início
+      </button>
+      <button class="nav-item" onclick="navigate('produto',this)">
+        <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l8 4.5l0 9l-8 4.5l-8 -4.5l0 -9l8 -4.5"/><path d="M12 12l8 -4.5"/><path d="M12 12l0 9"/><path d="M12 12l-8 -4.5"/></svg></span> Calendário de Produto
+      </button>
+      <button class="nav-item" onclick="navigate('social',this)">
+        <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 8a4 4 0 0 1 4 -4h8a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-8a4 4 0 0 1 -4 -4l0 -8"/><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M16.5 7.5v.01"/></svg></span> Planejamento Social
+      </button>
+      <button class="nav-item" onclick="navigate('arquivos',this)">
+        <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2"/></svg></span> Pasta de Arquivos
+      </button>
+      <button class="nav-item" onclick="navigate('parceiros',this)">
+        <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/><path d="M12 6l-3.293 3.293a1 1 0 0 0 0 1.414l.543 .543c.69 .69 1.81 .69 2.5 0l1 -1a3.182 3.182 0 0 1 4.5 0l2.25 2.25"/><path d="M12.5 15.5l2 2"/><path d="M15 13l2 2"/></svg></span> Parceiros
+      </button>
+    </div>
+    <div class="sidebar-footer">Nibo · Marketing</div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="page-title" id="page-title">Início</div>
+      <div class="page-subtitle" id="page-subtitle">Acesso rápido às ferramentas do time</div>
+    </div>
+    <div class="content">
+
+      <!-- INÍCIO -->
+      <div class="section active" id="section-inicio">
+        <div class="greeting-title">Olá, time de marketing 👋</div>
+        <div class="greeting-sub">Clique na estrela para favoritar um recurso.</div>
+        <div class="fav-section" id="fav-section">
+          <div class="section-label">Favoritos</div>
+          <div class="folder-grid" id="fav-grid"></div>
+        </div>
+        <div class="section-label">Todos os recursos</div>
+        <div class="folder-grid" id="main-grid"></div>
+      </div>
+
+      <!-- CALENDÁRIO -->
+      <div class="section" id="section-produto">
+        <div class="cal-header">
+          <div><div class="cal-title">Lançamentos e atualizações</div><div class="cal-sub">Adicione data, descrição e link do doc de campanha.</div></div>
+          <button class="btn-solid" onclick="toggleForm()"><span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg></span> Adicionar</button>
+        </div>
+        <div class="add-form" id="add-form">
+          <h3>Novo lançamento</h3>
+          <div class="form-row">
+            <div><label>Nome *</label><input type="text" id="f-name" placeholder="Ex: Módulo Conferência v2"/></div>
+            <div><label>Data *</label><input type="date" id="f-date"/></div>
+          </div>
+          <div class="form-row single">
+            <div><label>Descrição</label><textarea id="f-desc" placeholder="Breve descrição do lançamento..."></textarea></div>
+          </div>
+          <div class="form-row">
+            <div><label>Link do documento de campanha</label><input type="url" id="f-link" placeholder="https://docs.google.com/..."/></div>
+            <div><label>Status</label><select id="f-status"><option value="planejado">Planejado</option><option value="em breve">Em breve</option><option value="entregue">Entregue</option></select></div>
+          </div>
+          <div class="form-actions">
+            <button class="btn-solid" onclick="addLaunch()">Salvar</button>
+            <button class="btn-cancel" onclick="toggleForm()">Cancelar</button>
+          </div>
+        </div>
+        <div class="launch-list" id="launch-list"></div>
+        <div class="empty-launch" id="launch-empty">
+          <div class="ico ico-30" style="display:flex;justify-content:center;margin-bottom:10px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12"/><path d="M16 3l0 4"/><path d="M8 3l0 4"/><path d="M4 11l16 0"/><path d="M8 15h2v2h-2l0 -2"/></svg></div>
+          Nenhum lançamento cadastrado ainda.<br>Clique em "Adicionar" para começar.
+        </div>
+      </div>
+
+      <!-- SOCIAL -->
+      <div class="section" id="section-social">
+        <div class="social-center">
+          <div class="social-icon-wrap"><span class="ico ico-30"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 8a4 4 0 0 1 4 -4h8a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-8a4 4 0 0 1 -4 -4l0 -8"/><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M16.5 7.5v.01"/></svg></span></div>
+          <h2>Planejamento Social</h2>
+          <p>O calendário editorial fica na plataforma dedicada.</p>
+          <a href="https://claraabrantes-bot.github.io/planejamento-social-nibo/planejamento-social-media.html"
+             target="_blank" class="btn-solid" style="display:inline-flex;margin:0 auto;">
+            <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg></span> Abrir plataforma
+          </a>
+        </div>
+      </div>
+
+      <!-- ARQUIVOS -->
+      <div class="section" id="section-arquivos">
+        <div class="link-group">
+          <div class="link-group-title">Campanhas e Links</div>
+          <div class="link-wrap">
+            <div class="link-row">
+              <span class="ico ico-18 row-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14"/><path d="M3 10h18"/><path d="M10 3v18"/></svg></span>
+              <div class="link-info"><div class="link-name">Planilha de UTMs</div><div class="link-desc-text">Links com parâmetros de rastreamento por canal e campanha</div></div>
+              <a href="https://docs.google.com/spreadsheets/d/1uVl1DQvJwIEEm782j7HwEomSSYv5gy4HFsc0FJjamkY/edit" target="_blank" class="open-btn">Abrir <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg></span></a>
+            </div>
+            <div class="link-row">
+              <span class="ico ico-18 row-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10"/><path d="M7 15v-4a2 2 0 0 1 4 0v4"/><path d="M7 13l4 0"/><path d="M17 9v6h-1.5a1.5 1.5 0 1 1 1.5 -1.5"/></svg></span>
+              <div class="link-info"><div class="link-name">ADS · HubSpot</div><div class="link-desc-text">Campanhas ativas no Google Ads e Meta via HubSpot</div></div>
+              <a href="https://app.hubspot.com/ads/1554114/?attributionView=ALL&statuses=ENABLED,PAUSED&ADWORDS=1168795081&FACEBOOK=872030946181592&timeRange=LAST_MONTH&page=1" target="_blank" class="open-btn">Abrir <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg></span></a>
+            </div>
+          </div>
+        </div>
+        <div class="link-group">
+          <div class="link-group-title">Conteúdo e Vídeos</div>
+          <div class="link-wrap">
+            <div class="link-row">
+              <span class="ico ico-18 row-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 10l4.553 -2.276a1 1 0 0 1 1.447 .894v6.764a1 1 0 0 1 -1.447 .894l-4.553 -2.276v-4"/><path d="M3 8a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2l0 -8"/></svg></span>
+              <div class="link-info"><div class="link-name">Guia de Gravação</div><div class="link-desc-text">Materiais e orientações para gravação de vídeos</div></div>
+              <a href="https://drive.google.com/drive/folders/1_YHtvLpW4cbFaZNGv84ADS-fJPZEItnI" target="_blank" class="open-btn">Abrir <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg></span></a>
+            </div>
+            <div class="link-row">
+              <span class="ico ico-18 row-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0 -3 -3.85"/></svg></span>
+              <div class="link-info"><div class="link-name">Vídeos Embaixadores</div><div class="link-desc-text">Conteúdos produzidos pelos embaixadores do Nibo</div></div>
+              <a href="https://drive.google.com/drive/folders/1CIkBI307lYeYhjsJ1gKvrW3XoYDB1TUd" target="_blank" class="open-btn">Abrir <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg></span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PARCEIROS -->
+      <div class="section" id="section-parceiros">
+        <div style="font-size:13px;color:#6b7280;margin-bottom:16px;">Links de indicação e materiais por parceiro.</div>
+        <div class="link-wrap">
+          <div class="link-row">
+            <span class="ico ico-18 row-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14"/><path d="M3 10h18"/><path d="M10 3v18"/></svg></span>
+            <div class="link-info"><div class="link-name">Planilha de Parceiros e Indicação</div><div class="link-desc-text">Links de indicação, contatos e detalhes de cada parceria</div></div>
+            <a href="https://docs.google.com/spreadsheets/d/1cuF9LN-Z81N-WFBWKoS7SrYMB_mDdyVAio9DljN-9KY/edit?gid=0#gid=0" target="_blank" class="open-btn">Abrir <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg></span></a>
+          </div>
+        </div>
+        <div class="info-box">
+          <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M12 9h.01"/><path d="M11 12h1v4h1"/></svg></span>
+          Todos os detalhes de parceria ficam na planilha acima. Novos parceiros devem ser adicionados diretamente nela.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── SVG ICON HELPERS ──────────────────────────────────────────
+  const SVG = {
+    home: '<svg viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"/><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"/></svg>',
+    box: '<svg viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l8 4.5l0 9l-8 4.5l-8 -4.5l0 -9l8 -4.5"/><path d="M12 12l8 -4.5"/><path d="M12 12l0 9"/><path d="M12 12l-8 -4.5"/></svg>',
+    instagram: '<svg viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 8a4 4 0 0 1 4 -4h8a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-8a4 4 0 0 1 -4 -4l0 -8"/><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M16.5 7.5v.01"/></svg>',
+    folder: '<svg viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2"/></svg>',
+    handshake: '<svg viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/><path d="M12 6l-3.293 3.293a1 1 0 0 0 0 1.414l.543 .543c.69 .69 1.81 .69 2.5 0l1 -1a3.182 3.182 0 0 1 4.5 0l2.25 2.25"/><path d="M12.5 15.5l2 2"/><path d="M15 13l2 2"/></svg>',
+    star: '<svg viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245"/></svg>',
+    starFilled: '<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>',
+    plus: '<svg viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>',
+    extlink: '<svg viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg>',
+    trash: '<svg viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7l16 0"/><path d="M10 11l0 6"/><path d="M14 11l0 6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/></svg>',
+    calendar: '<svg viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12"/><path d="M16 3l0 4"/><path d="M8 3l0 4"/><path d="M4 11l16 0"/><path d="M8 15h2v2h-2l0 -2"/></svg>',
+    file: '<svg viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2"/><path d="M9 17h6"/><path d="M9 13h6"/></svg>',
+    table: '<svg viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14"/><path d="M3 10h18"/><path d="M10 3v18"/></svg>',
+    ad: '<svg viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10"/><path d="M7 15v-4a2 2 0 0 1 4 0v4"/><path d="M7 13l4 0"/><path d="M17 9v6h-1.5a1.5 1.5 0 1 1 1.5 -1.5"/></svg>',
+    video: '<svg viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 10l4.553 -2.276a1 1 0 0 1 1.447 .894v6.764a1 1 0 0 1 -1.447 .894l-4.553 -2.276v-4"/><path d="M3 8a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2l0 -8"/></svg>',
+    users: '<svg viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0 -3 -3.85"/></svg>',
+    info: '<svg viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M12 9h.01"/><path d="M11 12h1v4h1"/></svg>',
+  };
+
+  function ico(name, extra) {
+    const svg = SVG[name] || '';
+    const cls = extra ? ` style="${extra}"` : '';
+    return `<span class="ico"${cls}>${svg}</span>`;
+  }
+
+  // ── DATA ──────────────────────────────────────────────────────
+  const pageInfo = {
+    inicio:   ['Início',                'Acesso rápido às ferramentas do time'],
+    produto:  ['Calendário de Produto', 'Lançamentos e datas para comunicação'],
+    social:   ['Planejamento Social',   'Calendário editorial nas redes'],
+    arquivos: ['Pasta de Arquivos',     'Links centralizados para o time'],
+    parceiros:['Parceiros e Indicação', 'Links de indicação por parceiro'],
+  };
+
+  const cards = [
+    { id:'produto',   tag:'Produto',   name:'Calendário de Produto',   desc:'Lançamentos, datas e links de campanha',              icon:'box',       nav:'produto'   },
+    { id:'social',    tag:'Social',    name:'Planejamento Social',     desc:'Plataforma de agendamento e calendário editorial',     icon:'instagram', nav:'social'    },
+    { id:'arquivos',  tag:'Recursos',  name:'Pasta de Arquivos',       desc:'Links, assets, templates e relatórios',               icon:'folder',    nav:'arquivos'  },
+    { id:'parceiros', tag:'Parceiros', name:'Parceiros e Indicação',   desc:'Links de indicação e materiais por parceiro',         icon:'handshake', nav:'parceiros' },
+  ];
+
+  const favs = new Set();
+
+  function buildCard(card) {
+    const isFav = favs.has(card.id);
+    const div = document.createElement('div');
+    div.className = 'folder-card' + (isFav ? ' favorited' : '');
+    div.innerHTML = `
+      <button class="fav-btn" title="${isFav ? 'Remover dos favoritos' : 'Favoritar'}" onclick="toggleFav('${card.id}',event)">
+        <span class="ico ico-16">${isFav ? SVG.starFilled : SVG.star}</span>
+      </button>
+      <div class="fc-icon"><span class="ico ico-18">${SVG[card.icon]}</span></div>
+      <div class="fc-tag">${card.tag}</div>
+      <div class="fc-name">${card.name}</div>
+      <div class="fc-desc">${card.desc}</div>
+      <button class="fc-btn" onclick="goToNav('${card.nav}')">Acessar</button>
+    `;
+    return div;
+  }
+
+  function renderCards() {
+    const mainGrid   = document.getElementById('main-grid');
+    const favGrid    = document.getElementById('fav-grid');
+    const favSection = document.getElementById('fav-section');
+    mainGrid.innerHTML = '';
+    favGrid.innerHTML  = '';
+    cards.forEach(c => mainGrid.appendChild(buildCard(c)));
+    if (favs.size > 0) {
+      favSection.classList.add('has-favs');
+      cards.filter(c => favs.has(c.id)).forEach(c => favGrid.appendChild(buildCard(c)));
+    } else {
+      favSection.classList.remove('has-favs');
+    }
+    const addDiv = document.createElement('div');
+    addDiv.className = 'folder-card dashed-card';
+    addDiv.innerHTML = `<span class="ico ico-20">${SVG.plus}</span><span>Nova pasta</span>`;
+    mainGrid.appendChild(addDiv);
+  }
+
+  function toggleFav(id, e) {
+    e.stopPropagation();
+    favs.has(id) ? favs.delete(id) : favs.add(id);
+    renderCards();
+  }
+
+  function goToNav(id) {
+    const map = { produto:1, social:2, arquivos:3, parceiros:4 };
+    navigate(id, document.querySelectorAll('.nav-item')[map[id]]);
+  }
+
+  function navigate(id, btn) {
+    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    document.getElementById('section-' + id).classList.add('active');
+    document.getElementById('page-title').textContent    = pageInfo[id][0];
+    document.getElementById('page-subtitle').textContent = pageInfo[id][1];
+  }
+
+  function toggleForm() { document.getElementById('add-form').classList.toggle('open'); }
+
+  const statusMap = {
+    planejado:  ['tag-blue',  'planejado'],
+    'em breve': ['tag-amber', 'em breve'],
+    entregue:   ['tag-green', 'entregue'],
+  };
+  const launches = [];
+
+  function addLaunch() {
+    const name = document.getElementById('f-name').value.trim();
+    const date = document.getElementById('f-date').value;
+    if (!name || !date) { alert('Preencha nome e data.'); return; }
+    const desc   = document.getElementById('f-desc').value.trim();
+    const link   = document.getElementById('f-link').value.trim();
+    const status = document.getElementById('f-status').value;
+    const d      = new Date(date + 'T12:00:00');
+    launches.push({ name, date, desc, link, status, day: d.getDate(), month: d.toLocaleString('pt-BR',{month:'short'}).replace('.','') });
+    launches.sort((a,b) => new Date(a.date) - new Date(b.date));
+    renderLaunches();
+    ['f-name','f-date','f-desc','f-link'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('f-status').value = 'planejado';
+    toggleForm();
+  }
+
+  function deleteLaunch(i) { launches.splice(i,1); renderLaunches(); }
+
+  function renderLaunches() {
+    const list  = document.getElementById('launch-list');
+    const empty = document.getElementById('launch-empty');
+    if (!launches.length) { list.innerHTML = ''; empty.style.display = 'block'; return; }
+    empty.style.display = 'none';
+    list.innerHTML = launches.map((l,i) => `
+      <div class="launch-item">
+        <div class="li-date"><span class="li-day">${l.day}</span>${l.month}</div>
+        <div>
+          <div class="li-title">${l.name}</div>
+          ${l.desc ? `<div class="li-desc">${l.desc}</div>` : ''}
+          ${l.link ? `<a href="${l.link}" class="li-link" target="_blank"><span class="ico ico-16">${SVG.file}</span> Ver documento</a>` : ''}
+        </div>
+        <div class="li-right">
+          <span class="tag ${statusMap[l.status][0]}">${statusMap[l.status][1]}</span>
+          <button class="li-delete" onclick="deleteLaunch(${i})"><span class="ico ico-16">${SVG.trash}</span></button>
+        </div>
+      </div>`).join('');
+  }
+
+  renderCards();
+  renderLaunches();
+</script>
+</body>
+</html>
