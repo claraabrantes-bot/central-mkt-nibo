@@ -207,9 +207,23 @@
 
       <!-- SOCIAL -->
       <div class="section" id="section-social">
-        <iframe
-          src="https://claraabrantes-bot.github.io/planejamento-social-nibo/planejamento-social-media.html"
-          style="width:100%;height:calc(100vh - 90px);border:none;border-radius:12px;display:block;"
+        <div id="social-gate" style="display:flex;align-items:center;justify-content:center;height:calc(100vh - 90px);">
+          <div style="background:#fff;border:0.5px solid #e2e4e9;border-radius:16px;padding:36px 32px;max-width:380px;width:100%;text-align:center;">
+            <div style="width:52px;height:52px;border-radius:14px;background:#EBF4FF;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;">
+              <span class="ico" style="font-size:26px;color:#0072CE;"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6z"/><path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/><path d="M8 11v-4a4 4 0 1 1 8 0v4"/></svg></span>
+            </div>
+            <div style="font-size:15px;font-weight:600;color:#1a1a2e;margin-bottom:6px;">Acesso restrito</div>
+            <div style="font-size:13px;color:#6b7280;margin-bottom:22px;">Digite seu e-mail para acessar o planejamento social.</div>
+            <input type="email" id="social-email-input" placeholder="seu@nibo.com.br"
+              style="width:100%;font-size:13px;font-family:Poppins,sans-serif;padding:10px 12px;border-radius:8px;border:0.5px solid #d1d5db;color:#1a1a2e;outline:none;margin-bottom:10px;box-sizing:border-box;"
+              onkeydown="if(event.key==='Enter') checkSocialAccess()" />
+            <div id="social-gate-error" style="font-size:12px;color:#E24B4A;margin-bottom:10px;display:none;">E-mail não autorizado. Solicite acesso ao time de marketing.</div>
+            <button onclick="checkSocialAccess()" class="btn-solid" style="width:100%;justify-content:center;">Entrar</button>
+          </div>
+        </div>
+        <iframe id="social-iframe"
+          src="about:blank"
+          style="width:100%;height:calc(100vh - 90px);border:none;border-radius:12px;display:none;"
           title="Planejamento Social Nibo">
         </iframe>
       </div>
@@ -346,6 +360,41 @@
     }
 
   }
+
+  const SOCIAL_ALLOWED = [
+    'clara.abrantes@nibo.com.br',
+    'mariana.araujo@nibo.com.br',
+    'mikaella.nicomedes@nibo.com.br',
+    'millena.barros@nibo.com.br'
+  ];
+
+  function checkSocialAccess() {
+    const input = document.getElementById('social-email-input');
+    const error = document.getElementById('social-gate-error');
+    const email = input.value.trim().toLowerCase();
+    if (SOCIAL_ALLOWED.includes(email)) {
+      document.getElementById('social-gate').style.display = 'none';
+      const iframe = document.getElementById('social-iframe');
+      iframe.src = 'https://claraabrantes-bot.github.io/planejamento-social-nibo/planejamento-social-media.html';
+      iframe.style.display = 'block';
+      error.style.display = 'none';
+      sessionStorage.setItem('social-access', email);
+    } else {
+      error.style.display = 'block';
+      input.focus();
+    }
+  }
+
+  // restore session access
+  window.addEventListener('DOMContentLoaded', function() {
+    const saved = sessionStorage.getItem('social-access');
+    if (saved && SOCIAL_ALLOWED.includes(saved)) {
+      document.getElementById('social-gate').style.display = 'none';
+      const iframe = document.getElementById('social-iframe');
+      iframe.src = 'https://claraabrantes-bot.github.io/planejamento-social-nibo/planejamento-social-media.html';
+      iframe.style.display = 'block';
+    }
+  });
 
   function toggleFav(id, e) {
     e.stopPropagation();
