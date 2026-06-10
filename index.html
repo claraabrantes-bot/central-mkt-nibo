@@ -207,15 +207,11 @@
 
       <!-- SOCIAL -->
       <div class="section" id="section-social">
-        <div class="social-center">
-          <div class="social-icon-wrap"><span class="ico ico-30"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 8a4 4 0 0 1 4 -4h8a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-8a4 4 0 0 1 -4 -4l0 -8"/><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M16.5 7.5v.01"/></svg></span></div>
-          <h2>Planejamento Social</h2>
-          <p>O calendário editorial fica na plataforma dedicada.</p>
-          <a href="https://claraabrantes-bot.github.io/planejamento-social-nibo/planejamento-social-media.html"
-             target="_blank" class="btn-solid" style="display:inline-flex;margin:0 auto;">
-            <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg></span> Abrir plataforma
-          </a>
-        </div>
+        <iframe
+          src="https://claraabrantes-bot.github.io/planejamento-social-nibo/planejamento-social-media.html"
+          style="width:100%;height:calc(100vh - 90px);border:none;border-radius:12px;display:block;"
+          title="Planejamento Social Nibo">
+        </iframe>
       </div>
 
       <!-- ARQUIVOS -->
@@ -348,10 +344,7 @@
     } else {
       favSection.classList.remove('has-favs');
     }
-    const addDiv = document.createElement('div');
-    addDiv.className = 'folder-card dashed-card';
-    addDiv.innerHTML = `<span class="ico ico-20">${SVG.plus}</span><span>Nova pasta</span>`;
-    mainGrid.appendChild(addDiv);
+
   }
 
   function toggleFav(id, e) {
