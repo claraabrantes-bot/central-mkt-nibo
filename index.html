@@ -107,6 +107,19 @@
     .social-center h2 { font-size: 16px; font-weight: 600; color: #1a1a2e; margin-bottom: 8px; }
     .social-center p { font-size: 13px; color: #6b7280; margin-bottom: 24px; }
 
+
+    /* FILE CARDS */
+    .files-group-label { font-size: 10px; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.9px; margin-bottom: 10px; }
+    .file-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 12px; }
+    a.file-card { background: #ffffff; border: 0.5px solid #e2e4e9; border-radius: 12px; padding: 16px; text-decoration: none; display: flex; flex-direction: column; transition: border-color 0.15s; }
+    a.file-card:hover { border-color: #0072CE; }
+    a.file-card .fc-icon { width: 36px; height: 36px; border-radius: 10px; background: #EBF4FF; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; color: #0072CE; }
+    a.file-card .fc-tag { font-size: 10px; font-weight: 600; color: #0072CE; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 3px; }
+    a.file-card .fc-name { font-size: 13px; font-weight: 600; color: #1a1a2e; line-height: 1.3; }
+    a.file-card .fc-desc { font-size: 11.5px; color: #6b7280; margin-top: 4px; line-height: 1.5; flex: 1; }
+    a.file-card .fc-open { margin-top: 12px; font-size: 12px; font-weight: 500; color: #0072CE; display: flex; align-items: center; gap: 4px; background: #EBF4FF; padding: 6px 10px; border-radius: 6px; width: fit-content; }
+    .ico-14 { font-size: 14px; }
+
     /* LINKS */
     .link-group { margin-bottom: 22px; }
     .link-group-title { font-size: 10px; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.9px; margin-bottom: 8px; }
@@ -230,77 +243,81 @@
 
       <!-- ARQUIVOS -->
       <div class="section" id="section-arquivos">
-        <div class="link-group">
-          <div class="link-group-title">Campanhas e Links</div>
-          <div class="link-wrap">
-            <div class="link-row">
-              <span class="ico ico-18 row-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14"/><path d="M3 10h18"/><path d="M10 3v18"/></svg></span>
-              <div class="link-info"><div class="link-name">Planilha de UTMs</div><div class="link-desc-text">Links com parâmetros de rastreamento por canal e campanha</div></div>
-              <a href="https://docs.google.com/spreadsheets/d/1uVl1DQvJwIEEm782j7HwEomSSYv5gy4HFsc0FJjamkY/edit" target="_blank" class="open-btn">Abrir <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg></span></a>
-            </div>
-            <div class="link-row">
-              <span class="ico ico-18 row-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10"/><path d="M7 15v-4a2 2 0 0 1 4 0v4"/><path d="M7 13l4 0"/><path d="M17 9v6h-1.5a1.5 1.5 0 1 1 1.5 -1.5"/></svg></span>
-              <div class="link-info"><div class="link-name">ADS · HubSpot</div><div class="link-desc-text">Campanhas ativas no Google Ads e Meta via HubSpot</div></div>
-              <a href="https://app.hubspot.com/ads/1554114/?attributionView=ALL&statuses=ENABLED,PAUSED&ADWORDS=1168795081&FACEBOOK=872030946181592&timeRange=LAST_MONTH&page=1" target="_blank" class="open-btn">Abrir <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg></span></a>
-            </div>
-          </div>
+        <div class="files-group-label">Campanhas e Links</div>
+        <div class="file-grid">
+          <a href="https://docs.google.com/spreadsheets/d/1uVl1DQvJwIEEm782j7HwEomSSYv5gy4HFsc0FJjamkY/edit" target="_blank" class="file-card">
+            <div class="fc-icon"><span class="ico ico-18"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14"/><path d="M3 10h18"/><path d="M10 3v18"/></svg></span></div>
+            <div class="fc-tag">Campanhas</div>
+            <div class="fc-name">Planilha de UTMs</div>
+            <div class="fc-desc">Parâmetros de rastreamento por canal</div>
+            <div class="fc-open">Abrir <span class="ico ico-14"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg></span></div>
+          </a>
+          <a href="https://app.hubspot.com/ads/1554114/?attributionView=ALL&statuses=ENABLED,PAUSED&ADWORDS=1168795081&FACEBOOK=872030946181592&timeRange=LAST_MONTH&page=1" target="_blank" class="file-card">
+            <div class="fc-icon"><span class="ico ico-18"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10"/><path d="M7 15v-4a2 2 0 0 1 4 0v4"/><path d="M7 13l4 0"/><path d="M17 9v6h-1.5a1.5 1.5 0 1 1 1.5 -1.5"/></svg></span></div>
+            <div class="fc-tag">Campanhas</div>
+            <div class="fc-name">ADS · HubSpot</div>
+            <div class="fc-desc">Campanhas ativas no Google Ads e Meta</div>
+            <div class="fc-open">Abrir <span class="ico ico-14"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg></span></div>
+          </a>
         </div>
-        <div class="link-group">
-          <div class="link-group-title">Conteúdo e Vídeos</div>
-          <div class="link-wrap">
-            <div class="link-row">
-              <span class="ico ico-18 row-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2"/></svg></span>
-              <div class="link-info"><div class="link-name">Pasta de Divulgação</div><div class="link-desc-text">Todos os materiais de divulgação do time</div></div>
-              <a href="https://drive.google.com/drive/folders/1yHX-y_3KOomT2b0YN0dAFTLtATspb23F" target="_blank" class="open-btn">Abrir <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg></span></a>
-            </div>
-            <div class="link-row">
-              <span class="ico ico-18 row-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2"/></svg></span>
-              <div class="link-info"><div class="link-name">Pack Embaixadores</div><div class="link-desc-text">Materiais para uso pelos embaixadores do Nibo</div></div>
-              <a href="https://drive.google.com/drive/folders/1iM96LgLrXqwO6VGuz1r867OGOlXKTvos" target="_blank" class="open-btn">Abrir <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg></span></a>
-            </div>
-            <div class="link-row">
-              <span class="ico ico-18 row-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2"/></svg></span>
-              <div class="link-info"><div class="link-name">Pack Institucional</div><div class="link-desc-text">Materiais institucionais do Nibo</div></div>
-              <a href="https://drive.google.com/drive/folders/1r_py6_L36FAO3meXUY11_IIpOse4ajUS" target="_blank" class="open-btn">Abrir <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg></span></a>
-            </div>
-            <div class="link-row">
-              <span class="ico ico-18 row-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2"/></svg></span>
-              <div class="link-info"><div class="link-name">Brand para Externos</div><div class="link-desc-text">Assets de marca para parceiros e uso externo</div></div>
-              <a href="https://drive.google.com/drive/folders/1HLM0t_i2hfmBY2_gvZrMTtlAzwFstE_K" target="_blank" class="open-btn">Abrir <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg></span></a>
-            </div>
-            <div class="link-row">
-              <span class="ico ico-18 row-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2"/></svg></span>
-              <div class="link-info"><div class="link-name">Background MKT</div><div class="link-desc-text">Fundos e assets visuais de marketing</div></div>
-              <a href="https://drive.google.com/drive/folders/1VgXlVxJKI5ozwYcyqZnT49Zk-OUwsRG0" target="_blank" class="open-btn">Abrir <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg></span></a>
-            </div>
-            <div class="link-row">
-              <span class="ico ico-18 row-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2"/></svg></span>
-              <div class="link-info"><div class="link-name">MKT + CS · Materiais Personalizados</div><div class="link-desc-text">Materiais personalizados de marketing e customer success</div></div>
-              <a href="https://drive.google.com/drive/folders/11AusVPSZo4buUqPQgN_jiJkzICahznJV" target="_blank" class="open-btn">Abrir <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg></span></a>
-            </div>
-            <div class="link-row">
-              <span class="ico ico-18 row-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2"/></svg></span>
-              <div class="link-info"><div class="link-name">Guia de Gravação</div><div class="link-desc-text">Materiais e orientações para gravação de vídeos</div></div>
-              <a href="https://drive.google.com/drive/folders/1_YHtvLpW4cbFaZNGv84ADS-fJPZEItnI" target="_blank" class="open-btn">Abrir <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg></span></a>
-            </div>
-            <div class="link-row">
-              <span class="ico ico-18 row-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2"/></svg></span>
-              <div class="link-info"><div class="link-name">Vídeos Embaixadores</div><div class="link-desc-text">Conteúdos produzidos pelos embaixadores do Nibo</div></div>
-              <a href="https://drive.google.com/drive/folders/1CIkBI307lYeYhjsJ1gKvrW3XoYDB1TUd" target="_blank" class="open-btn">Abrir <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg></span></a>
-            </div>
-          </div>
-        </div>
-            <div class="link-row">
-              <span class="ico ico-18 row-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 10l4.553 -2.276a1 1 0 0 1 1.447 .894v6.764a1 1 0 0 1 -1.447 .894l-4.553 -2.276v-4"/><path d="M3 8a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2l0 -8"/></svg></span>
-              <div class="link-info"><div class="link-name">Guia de Gravação</div><div class="link-desc-text">Materiais e orientações para gravação de vídeos</div></div>
-              <a href="https://drive.google.com/drive/folders/1_YHtvLpW4cbFaZNGv84ADS-fJPZEItnI" target="_blank" class="open-btn">Abrir <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg></span></a>
-            </div>
-            <div class="link-row">
-              <span class="ico ico-18 row-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0 -3 -3.85"/></svg></span>
-              <div class="link-info"><div class="link-name">Vídeos Embaixadores</div><div class="link-desc-text">Conteúdos produzidos pelos embaixadores do Nibo</div></div>
-              <a href="https://drive.google.com/drive/folders/1CIkBI307lYeYhjsJ1gKvrW3XoYDB1TUd" target="_blank" class="open-btn">Abrir <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg></span></a>
-            </div>
-          </div>
+        <div class="files-group-label" style="margin-top:20px;">Conteúdo e Vídeos</div>
+        <div class="file-grid">
+          <a href="https://drive.google.com/drive/folders/1yHX-y_3KOomT2b0YN0dAFTLtATspb23F" target="_blank" class="file-card">
+            <div class="fc-icon"><span class="ico ico-18"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2"/></svg></span></div>
+            <div class="fc-tag">Drive</div>
+            <div class="fc-name">Pasta de Divulgação</div>
+            <div class="fc-desc">Todos os materiais de divulgação do time</div>
+            <div class="fc-open">Abrir <span class="ico ico-14"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg></span></div>
+          </a>
+          <a href="https://drive.google.com/drive/folders/1iM96LgLrXqwO6VGuz1r867OGOlXKTvos" target="_blank" class="file-card">
+            <div class="fc-icon"><span class="ico ico-18"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2"/></svg></span></div>
+            <div class="fc-tag">Drive</div>
+            <div class="fc-name">Pack Embaixadores</div>
+            <div class="fc-desc">Materiais para uso pelos embaixadores</div>
+            <div class="fc-open">Abrir <span class="ico ico-14"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg></span></div>
+          </a>
+          <a href="https://drive.google.com/drive/folders/1r_py6_L36FAO3meXUY11_IIpOse4ajUS" target="_blank" class="file-card">
+            <div class="fc-icon"><span class="ico ico-18"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2"/></svg></span></div>
+            <div class="fc-tag">Drive</div>
+            <div class="fc-name">Pack Institucional</div>
+            <div class="fc-desc">Materiais institucionais do Nibo</div>
+            <div class="fc-open">Abrir <span class="ico ico-14"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg></span></div>
+          </a>
+          <a href="https://drive.google.com/drive/folders/1HLM0t_i2hfmBY2_gvZrMTtlAzwFstE_K" target="_blank" class="file-card">
+            <div class="fc-icon"><span class="ico ico-18"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2"/></svg></span></div>
+            <div class="fc-tag">Brand</div>
+            <div class="fc-name">Brand para Externos</div>
+            <div class="fc-desc">Assets de marca para parceiros e uso externo</div>
+            <div class="fc-open">Abrir <span class="ico ico-14"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg></span></div>
+          </a>
+          <a href="https://drive.google.com/drive/folders/1VgXlVxJKI5ozwYcyqZnT49Zk-OUwsRG0" target="_blank" class="file-card">
+            <div class="fc-icon"><span class="ico ico-18"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2"/></svg></span></div>
+            <div class="fc-tag">Drive</div>
+            <div class="fc-name">Background MKT</div>
+            <div class="fc-desc">Fundos e assets visuais de marketing</div>
+            <div class="fc-open">Abrir <span class="ico ico-14"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg></span></div>
+          </a>
+          <a href="https://drive.google.com/drive/folders/11AusVPSZo4buUqPQgN_jiJkzICahznJV" target="_blank" class="file-card">
+            <div class="fc-icon"><span class="ico ico-18"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2"/></svg></span></div>
+            <div class="fc-tag">Drive</div>
+            <div class="fc-name">MKT + CS Materiais</div>
+            <div class="fc-desc">Materiais personalizados de marketing e CS</div>
+            <div class="fc-open">Abrir <span class="ico ico-14"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg></span></div>
+          </a>
+          <a href="https://drive.google.com/drive/folders/1_YHtvLpW4cbFaZNGv84ADS-fJPZEItnI" target="_blank" class="file-card">
+            <div class="fc-icon"><span class="ico ico-18"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M15 10l4.553 -2.276a1 1 0 0 1 1.447 .894v6.764a1 1 0 0 1 -1.447 .894l-4.553 -2.276v-4"/><path d="M3 8a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2l0 -8"/></svg></span></div>
+            <div class="fc-tag">Vídeo</div>
+            <div class="fc-name">Guia de Gravação</div>
+            <div class="fc-desc">Orientações para gravação de vídeos</div>
+            <div class="fc-open">Abrir <span class="ico ico-14"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg></span></div>
+          </a>
+          <a href="https://drive.google.com/drive/folders/1CIkBI307lYeYhjsJ1gKvrW3XoYDB1TUd" target="_blank" class="file-card">
+            <div class="fc-icon"><span class="ico ico-18"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0 -3 -3.85"/></svg></span></div>
+            <div class="fc-tag">Vídeo</div>
+            <div class="fc-name">Vídeos Embaixadores</div>
+            <div class="fc-desc">Conteúdos dos embaixadores do Nibo</div>
+            <div class="fc-open">Abrir <span class="ico ico-14"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg></span></div>
+          </a>
         </div>
       </div>
 
