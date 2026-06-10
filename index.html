@@ -358,14 +358,26 @@
     navigate(id, document.querySelectorAll('.nav-item')[map[id]]);
   }
 
-  function navigate(id, btn) {
+  function navigate(id, btn, pushState = true) {
     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    if (!btn) btn = document.querySelector(`.nav-item[onclick*="'${id}'"]`);
     if (btn) btn.classList.add('active');
     document.getElementById('section-' + id).classList.add('active');
     document.getElementById('page-title').textContent    = pageInfo[id][0];
     document.getElementById('page-subtitle').textContent = pageInfo[id][1];
+    if (pushState) history.pushState({ id }, '', '#' + id);
   }
+
+  window.addEventListener('popstate', function(e) {
+    const id = e.state ? e.state.id : 'inicio';
+    navigate(id, null, false);
+  });
+
+  // handle direct load with hash
+  const initialHash = location.hash.replace('#', '') || 'inicio';
+  if (pageInfo[initialHash]) navigate(initialHash, null, false);
+  else navigate('inicio', null, false);
 
   function toggleForm() { document.getElementById('add-form').classList.toggle('open'); }
 
