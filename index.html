@@ -549,7 +549,7 @@
           <div style="font-size:15px;font-weight:600;color:#1a1a2e;margin-bottom:4px;">Nossos Embaixadores</div>
           <div style="font-size:13px;color:#6b7280;">Criadores de conteúdo parceiros do Nibo. Siga, curta e compartilhe o conteúdo deles!</div>
         </div>
-        <div id="emb-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;"></div>
+        <div id="emb-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;"></div>
       </div>
 
     </div>
@@ -1210,6 +1210,8 @@
   function initApp() {
     renderCards();
     loadPostLinks();
+    // pre-render embaixadores so it's ready when user clicks
+    setTimeout(renderEmbaixadores, 300);
     // restore hash navigation
     const hash = location.hash.replace('#','') || 'inicio';
     if (pageInfo[hash]) navigate(hash, null, false);
@@ -1225,6 +1227,7 @@
   // ── EMBAIXADORES ─────────────────────────────────────────────
   const embaixadores = [
     { handle: 'mayarajunges',             name: 'Mayara Junges' },
+    { handle: 'brunarauencontadora',      name: 'Bruna Rauen' },
     { handle: 'cfcontabilidadefranquias', name: 'CF Contabilidade' },
     { handle: 'luizhenriquecontador',     name: 'Luiz Henrique' },
     { handle: 'nataliaalvescontadora',    name: 'Natalia Alves' },
@@ -1239,6 +1242,7 @@
 
     const bios = {
       'mayarajunges':            'Contadora e especialista em BPO Financeiro. Criadora de conteúdo sobre contabilidade e gestão.',
+      'brunarauencontadora':     'Contadora e criadora de conteúdo sobre contabilidade e finanças.',
       'cfcontabilidadefranquias':'Contabilidade especializada em franquias e negócios em expansão.',
       'luizhenriquecontador':    'Contador e mentor. Conteúdo sobre crescimento de escritórios contábeis.',
       'nataliaalvescontadora':   'Contadora com foco em educação financeira e gestão para pequenas empresas.',
