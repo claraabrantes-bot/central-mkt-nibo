@@ -740,7 +740,17 @@
         if (launches.length && (!activeMonth || !launches.find(l=>l.monthKey===activeMonth))) {
           // default to current month if possible, else first
           const now = new Date().toISOString().slice(0,7);
-          activeMonth = launches.find(l=>l.monthKey===now) ? now : launches[0].monthKey;
+          // Set activeMonth to current month if has data, else first launch
+          // BUT keep activeYear as current year (2026) — user can navigate with arrows
+          const nowYear = new Date().getFullYear().toString();
+          if (launches.find(l=>l.monthKey===now)) {
+            activeMonth = now;
+          } else if (launches.find(l=>l.monthKey && l.monthKey.startsWith(nowYear))) {
+            activeMonth = launches.find(l=>l.monthKey && l.monthKey.startsWith(nowYear)).monthKey;
+          } else {
+            activeMonth = launches[0].monthKey;
+            activeYear = parseInt(activeMonth.slice(0,4));
+          }
           activeYear  = parseInt(activeMonth.slice(0,4));
         }
         renderLaunches();
@@ -902,9 +912,6 @@
     const yearLabel = document.getElementById('year-label');
     const now = new Date();
     const todayKey = now.toISOString().slice(0,7);
-    // Always sync activeYear with activeMonth
-    if (activeMonth) activeYear = parseInt(activeMonth.slice(0,4));
-    else activeYear = now.getFullYear();
     yearLabel.textContent = activeYear;
 
     tabs.innerHTML = PT_MONTHS.map((m, i) => {
