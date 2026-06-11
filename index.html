@@ -902,6 +902,9 @@
     const yearLabel = document.getElementById('year-label');
     const now = new Date();
     const todayKey = now.toISOString().slice(0,7);
+    // Always sync activeYear with activeMonth
+    if (activeMonth) activeYear = parseInt(activeMonth.slice(0,4));
+    else activeYear = now.getFullYear();
     yearLabel.textContent = activeYear;
 
     tabs.innerHTML = PT_MONTHS.map((m, i) => {
