@@ -269,6 +269,7 @@
           </div>
         </div>
 
+        <div id="alerts-wrap"></div>
         <div class="cal-header">
           <div>
             <div class="cal-title">Lançamentos e atualizações</div>
@@ -936,11 +937,11 @@
 
     // List for active month
     if (!activeMonth || !months[activeMonth]) {
-      document.getElementById('launch-list').innerHTML = '';
-      document.getElementById('launch-empty').style.display = 'block';
+      if (list) list.innerHTML = '';
+      if (empty) empty.style.display = 'block';
       return;
     }
-    document.getElementById('launch-empty').style.display = 'none';
+    if (empty) empty.style.display = 'none';
     const items = months[activeMonth].items;
     list.innerHTML = items.map((l,i) => {
       const days = daysUntil(l.date);
