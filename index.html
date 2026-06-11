@@ -130,6 +130,12 @@
     .social-center p { font-size: 13px; color: #6b7280; margin-bottom: 24px; }
 
 
+    /* INFO CARDS (início) */
+    .info-card { background:#fff; border:0.5px solid #e2e4e9; border-radius:12px; padding:18px; cursor:pointer; transition:border-color 0.15s; }
+    .info-card:hover { border-color:#0072CE; }
+    .info-card-icon { width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; margin-bottom:12px; font-size:20px; }
+    .info-card-title { font-size:13.5px; font-weight:600; color:#1a1a2e; margin-bottom:6px; }
+    .info-card-desc { font-size:12px; color:#6b7280; line-height:1.6; }
     /* FILE CARDS */
     .files-group-label { font-size: 10px; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.9px; margin-bottom: 10px; }
     .file-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 12px; }
@@ -199,14 +205,43 @@
 
       <!-- INÍCIO -->
       <div class="section active" id="section-inicio">
-        <div class="greeting-title">Olá, time de marketing 👋</div>
-        <div class="greeting-sub">Clique na estrela para favoritar um recurso.</div>
-        <div class="fav-section" id="fav-section">
-          <div class="section-label">Favoritos</div>
-          <div class="folder-grid" id="fav-grid"></div>
+        <div style="margin-bottom:24px;">
+          <div style="font-size:18px;font-weight:600;color:#1a1a2e;margin-bottom:6px;">Bem-vindo à Central de Marketing Nibo 👋</div>
+          <div style="font-size:13.5px;color:#6b7280;line-height:1.7;max-width:680px;">
+            Esta central foi criada para manter todo o time da Nibo informado sobre o que está acontecendo no marketing — lançamentos de produto, campanhas ativas, quem são nossos embaixadores e muito mais. Navegue pelas seções e fique por dentro!
+          </div>
         </div>
-        <div class="section-label">Todos os recursos</div>
-        <div class="folder-grid" id="main-grid"></div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:28px;">
+          <div class="info-card" onclick="goToNav('produto')">
+            <div class="info-card-icon" style="background:#EBF4FF;color:#0072CE;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l8 4.5l0 9l-8 4.5l-8 -4.5l0 -9l8 -4.5"/><path d="M12 12l8 -4.5"/><path d="M12 12l0 9"/><path d="M12 12l-8 -4.5"/></svg></div>
+            <div class="info-card-title">Calendário de Produto</div>
+            <div class="info-card-desc">Acompanhe os próximos lançamentos e atualizações do produto com datas e links de campanha.</div>
+          </div>
+          <div class="info-card" onclick="goToNav('social')">
+            <div class="info-card-icon" style="background:#FDF2FF;color:#9333EA;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 8a4 4 0 0 1 4 -4h8a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-8a4 4 0 0 1 -4 -4l0 -8"/><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M16.5 7.5v.01"/></svg></div>
+            <div class="info-card-title">Últimos posts no Instagram</div>
+            <div class="info-card-desc">Veja o que foi publicado no @nibo.software e engaje curtindo e comentando — isso faz diferença!</div>
+          </div>
+          <div class="info-card" onclick="goToNav('embaixadores')">
+            <div class="info-card-icon" style="background:#ECFDF5;color:#059669;"><svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" stroke="none"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg></div>
+            <div class="info-card-title">Nossos Embaixadores</div>
+            <div class="info-card-desc">Conheça os criadores de conteúdo parceiros do Nibo e siga-os no Instagram.</div>
+          </div>
+          <div class="info-card" onclick="goToNav('arquivos')">
+            <div class="info-card-icon" style="background:#FFF7ED;color:#EA580C;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2"/></svg></div>
+            <div class="info-card-title">Pasta de Arquivos</div>
+            <div class="info-card-desc">Acesse materiais, assets de marca, vídeos e links centralizados do time de marketing.</div>
+          </div>
+        </div>
+
+        <div style="background:#EBF4FF;border-radius:12px;padding:18px 20px;display:flex;align-items:flex-start;gap:14px;max-width:680px;">
+          <span style="font-size:22px;flex-shrink:0;">💡</span>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:#1a1a2e;margin-bottom:4px;">Como posso ajudar?</div>
+            <div style="font-size:12.5px;color:#374151;line-height:1.6;">Curta os posts do Instagram do Nibo, compartilhe conteúdos dos nossos embaixadores e fique de olho nos lançamentos — cada ação de engajamento ajuda a fortalecer nossa presença digital.</div>
+          </div>
+        </div>
       </div>
 
       <!-- CALENDÁRIO -->
@@ -215,12 +250,31 @@
         <!-- ALERTAS 7 DIAS -->
         <div id="alerts-wrap"></div>
 
+        <!-- PIN GATE -->
+        <div id="pin-gate" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:999;align-items:center;justify-content:center;">
+          <div style="background:#fff;border-radius:16px;padding:32px 28px;max-width:320px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+            <div style="width:48px;height:48px;border-radius:12px;background:#EBF4FF;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:22px;">🔐</div>
+            <div style="font-size:15px;font-weight:600;color:#1a1a2e;margin-bottom:6px;">Área restrita</div>
+            <div style="font-size:13px;color:#6b7280;margin-bottom:20px;">Digite o PIN do time de marketing para editar.</div>
+            <input type="password" id="pin-input" maxlength="6" placeholder="••••••"
+              style="width:100%;font-size:20px;letter-spacing:8px;text-align:center;padding:10px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;font-family:Poppins,sans-serif;margin-bottom:10px;"
+              onkeydown="if(event.key==='Enter')checkPin()" />
+            <div id="pin-error" style="font-size:12px;color:#E24B4A;margin-bottom:10px;display:none;">PIN incorreto. Tente novamente.</div>
+            <div style="display:flex;gap:8px;">
+              <button onclick="closePinGate()" class="btn-cancel" style="flex:1;">Cancelar</button>
+              <button onclick="checkPin()" class="btn-solid" style="flex:1;justify-content:center;">Entrar</button>
+            </div>
+          </div>
+        </div>
+
         <div class="cal-header">
           <div>
             <div class="cal-title">Lançamentos e atualizações</div>
-            <div class="cal-sub">Organizado por mês · alertas automáticos 7 dias antes</div>
+            <div class="cal-sub" id="cal-sub-text">Organizado por mês · alertas automáticos 7 dias antes</div>
           </div>
-          <button class="btn-solid" onclick="toggleForm()"><span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg></span> Adicionar</button>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <button id="lock-btn" class="btn-cancel" onclick="openPinGate()" style="display:flex;align-items:center;gap:6px;font-size:12px;">🔒 Editar</button>
+            <button id="unlock-btn" class="btn-solid" onclick="toggleForm()" style="display:none;"><span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg></span> Adicionar</button>
         </div>
 
         <div class="add-form" id="add-form">
@@ -269,25 +323,16 @@
 
       <!-- SOCIAL -->
       <div class="section" id="section-social">
-        <div id="social-gate" style="display:flex;align-items:center;justify-content:center;height:calc(100vh - 90px);">
-          <div style="background:#fff;border:0.5px solid #e2e4e9;border-radius:16px;padding:36px 32px;max-width:380px;width:100%;text-align:center;">
-            <div style="width:52px;height:52px;border-radius:14px;background:#EBF4FF;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;">
-              <span class="ico" style="font-size:26px;color:#0072CE;"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6z"/><path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/><path d="M8 11v-4a4 4 0 1 1 8 0v4"/></svg></span>
-            </div>
-            <div style="font-size:15px;font-weight:600;color:#1a1a2e;margin-bottom:6px;">Acesso restrito</div>
-            <div style="font-size:13px;color:#6b7280;margin-bottom:22px;">Digite seu e-mail para acessar o planejamento social.</div>
-            <input type="email" id="social-email-input" placeholder="seu@nibo.com.br"
-              style="width:100%;font-size:13px;font-family:Poppins,sans-serif;padding:10px 12px;border-radius:8px;border:0.5px solid #d1d5db;color:#1a1a2e;outline:none;margin-bottom:10px;box-sizing:border-box;"
-              onkeydown="if(event.key==='Enter') checkSocialAccess()" />
-            <div id="social-gate-error" style="font-size:12px;color:#E24B4A;margin-bottom:10px;display:none;">E-mail não autorizado. Solicite acesso ao time de marketing.</div>
-            <button onclick="checkSocialAccess()" class="btn-solid" style="width:100%;justify-content:center;">Entrar</button>
-          </div>
+        <div style="margin-bottom:18px;">
+          <div style="font-size:15px;font-weight:600;color:#1a1a2e;margin-bottom:4px;">Últimos posts no Instagram</div>
+          <div style="font-size:13px;color:#6b7280;">Veja o que foi publicado no <a href="https://instagram.com/nibo.software" target="_blank" style="color:#9333EA;text-decoration:none;font-weight:500;">@nibo.software</a> e engaje — curtidas e comentários são muito importantes para o alcance!</div>
         </div>
-        <iframe id="social-iframe"
-          src="about:blank"
-          style="width:100%;height:calc(100vh - 90px);border:none;border-radius:12px;display:none;"
-          title="Planejamento Social Nibo">
-        </iframe>
+        <div id="insta-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;"></div>
+        <div id="insta-loading" style="text-align:center;padding:40px;color:#9ca3af;font-size:13px;">Carregando posts...</div>
+        <div id="insta-error" style="display:none;background:#FFF7ED;border:0.5px solid #FCD34D;border-radius:10px;padding:16px 20px;font-size:13px;color:#92400E;margin-top:8px;">
+          Não foi possível carregar os posts automaticamente. 
+          <a href="https://instagram.com/nibo.software" target="_blank" style="color:#0072CE;font-weight:500;">Abrir Instagram do Nibo ↗</a>
+        </div>
       </div>
 
       <!-- ARQUIVOS -->
@@ -377,20 +422,12 @@
         </div>
       </div>
 
-      <!-- PARCEIROS -->
       <div class="section" id="section-embaixadores">
-        <div style="font-size:13px;color:#6b7280;margin-bottom:16px;">Links e materiais dos embaixadores.</div>
-        <div class="link-wrap">
-          <div class="link-row">
-            <span class="ico ico-18 row-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14"/><path d="M3 10h18"/><path d="M10 3v18"/></svg></span>
-            <div class="link-info"><div class="link-name">Planilha de Embaixadores</div><div class="link-desc-text">Links de indicação, contatos e detalhes de cada parceria</div></div>
-            <a href="https://docs.google.com/spreadsheets/d/1cuF9LN-Z81N-WFBWKoS7SrYMB_mDdyVAio9DljN-9KY/edit?gid=0#gid=0" target="_blank" class="open-btn">Abrir <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg></span></a>
-          </div>
+        <div style="margin-bottom:20px;">
+          <div style="font-size:15px;font-weight:600;color:#1a1a2e;margin-bottom:4px;">Nossos Embaixadores</div>
+          <div style="font-size:13px;color:#6b7280;">Criadores de conteúdo parceiros do Nibo. Siga, curta e compartilhe o conteúdo deles!</div>
         </div>
-        <div class="info-box">
-          <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M12 9h.01"/><path d="M11 12h1v4h1"/></svg></span>
-          Todos os detalhes de parceria ficam na planilha acima. Novos embaixadores devem ser adicionados diretamente nela.
-        </div>
+        <div id="emb-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;"></div>
       </div>
 
     </div>
@@ -557,7 +594,45 @@
   const db = firebase.database();
   const launchesRef = db.ref('launches');
 
-  function toggleForm() { document.getElementById('add-form').classList.toggle('open'); }
+  const CORRECT_PIN = '082026';
+  let calUnlocked = false;
+
+  function openPinGate() {
+    document.getElementById('pin-gate').style.display = 'flex';
+    document.getElementById('pin-input').value = '';
+    document.getElementById('pin-error').style.display = 'none';
+    setTimeout(()=>document.getElementById('pin-input').focus(), 100);
+  }
+  function closePinGate() {
+    document.getElementById('pin-gate').style.display = 'none';
+  }
+  function checkPin() {
+    const val = document.getElementById('pin-input').value;
+    if (val === CORRECT_PIN) {
+      calUnlocked = true;
+      closePinGate();
+      document.getElementById('lock-btn').style.display = 'none';
+      document.getElementById('unlock-btn').style.display = 'inline-flex';
+      document.getElementById('relock-btn').style.display = 'inline-flex';
+      document.getElementById('cal-sub-text').textContent = 'Modo edição ativo · clique em Bloquear quando terminar';
+    } else {
+      document.getElementById('pin-error').style.display = 'block';
+      document.getElementById('pin-input').value = '';
+      document.getElementById('pin-input').focus();
+    }
+  }
+  function lockCalendar() {
+    calUnlocked = false;
+    document.getElementById('lock-btn').style.display = 'inline-flex';
+    document.getElementById('unlock-btn').style.display = 'none';
+    document.getElementById('relock-btn').style.display = 'none';
+    document.getElementById('add-form').classList.remove('open');
+    document.getElementById('cal-sub-text').textContent = 'Organizado por mês · alertas automáticos 7 dias antes';
+  }
+  function toggleForm() {
+    if (!calUnlocked) { openPinGate(); return; }
+    document.getElementById('add-form').classList.toggle('open');
+  }
 
   const statusMap = {
     planejado:  ['tag-blue',  'planejado'],
@@ -709,7 +784,7 @@
         </div>
         <div class="li-right">
           <span class="tag ${statusMap[l.status][0]}">${statusMap[l.status][1]}</span>
-          <button class="li-delete" onclick="deleteLaunch('${l.id}')"><span class="ico ico-16">${SVG.trash}</span></button>
+          ${calUnlocked ? `<button class="li-delete" onclick="deleteLaunch('${l.id}')"><span class="ico ico-16">${SVG.trash}</span></button>` : ''}
         </div>
       </div>`;
     }).join('');
@@ -717,6 +792,81 @@
 
   renderCards();
   renderLaunches();
+
+  // ── EMBAIXADORES ─────────────────────────────────────────────
+  const embaixadores = [
+    { handle: 'mayarajunges',             name: 'Mayara Junges' },
+    { handle: 'cfcontabilidadefranquias', name: 'CF Contabilidade' },
+    { handle: 'luizhenriquecontador',     name: 'Luiz Henrique' },
+    { handle: 'nataliaalvescontadora',    name: 'Natalia Alves' },
+    { handle: 'alvarocastro.tech',        name: 'Álvaro Castro' },
+    { handle: 'soubarbaramaciel',         name: 'Bárbara Maciel' },
+    { handle: 'adriana.martinsg',         name: 'Adriana Martins' },
+  ];
+
+  function renderEmbaixadores() {
+    const grid = document.getElementById('emb-grid');
+    grid.innerHTML = embaixadores.map(e => `
+      <a href="https://instagram.com/${e.handle}" target="_blank"
+         style="background:#fff;border:0.5px solid #e2e4e9;border-radius:14px;padding:20px 16px;text-decoration:none;display:flex;flex-direction:column;align-items:center;text-align:center;transition:border-color 0.15s;cursor:pointer;"
+         onmouseover="this.style.borderColor='#9333EA'" onmouseout="this.style.borderColor='#e2e4e9'">
+        <div id="avatar-${e.handle}" style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#833AB4,#FD1D1D,#FCB045);display:flex;align-items:center;justify-content:center;margin-bottom:12px;overflow:hidden;flex-shrink:0;">
+          <span style="font-size:22px;color:#fff;font-weight:600;">${e.name.charAt(0)}</span>
+        </div>
+        <div style="font-size:13px;font-weight:600;color:#1a1a2e;margin-bottom:3px;">${e.name}</div>
+        <div style="font-size:12px;color:#9333EA;margin-bottom:10px;">@${e.handle}</div>
+        <div style="font-size:11.5px;font-weight:500;color:#fff;background:linear-gradient(135deg,#833AB4,#FD1D1D);padding:5px 14px;border-radius:20px;display:inline-flex;align-items:center;gap:5px;">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 8a4 4 0 0 1 4 -4h8a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-8a4 4 0 0 1 -4 -4l0 -8"/><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M16.5 7.5v.01"/></svg>
+          Ver perfil
+        </div>
+      </a>`).join('');
+
+    // Try to load avatars via unavatar.io
+    embaixadores.forEach(e => {
+      const img = new Image();
+      img.onload = () => {
+        const el = document.getElementById('avatar-' + e.handle);
+        if (el) { el.innerHTML = ''; el.style.background = 'none'; el.style.padding = '0'; const i = document.createElement('img'); i.src = img.src; i.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;'; el.appendChild(i); }
+      };
+      img.src = 'https://unavatar.io/instagram/' + e.handle;
+    });
+  }
+
+  // ── INSTAGRAM POSTS ──────────────────────────────────────────
+  async function loadInstagramPosts() {
+    const loading = document.getElementById('insta-loading');
+    const grid    = document.getElementById('insta-grid');
+    const errEl   = document.getElementById('insta-error');
+    try {
+      const r = await fetch('https://www.instagram.com/nibo.software/?__a=1&__d=dis', {mode:'cors'});
+      throw new Error('fallback'); // instagram blocks cors — use fallback
+    } catch(e) {
+      // Show static fallback linking to Instagram
+      loading.style.display = 'none';
+      grid.innerHTML = `
+        <div style="grid-column:1/-1;background:#fff;border:0.5px solid #e2e4e9;border-radius:14px;padding:32px;text-align:center;">
+          <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#833AB4,#FD1D1D,#FCB045);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">
+            <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 8a4 4 0 0 1 4 -4h8a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-8a4 4 0 0 1 -4 -4l0 -8"/><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M16.5 7.5v.01"/></svg>
+          </div>
+          <div style="font-size:15px;font-weight:600;color:#1a1a2e;margin-bottom:6px;">@nibo.software</div>
+          <div style="font-size:13px;color:#6b7280;margin-bottom:20px;max-width:360px;margin-left:auto;margin-right:auto;">O Instagram não permite carregar posts automaticamente por segurança. Acesse o perfil, curta e comente nos posts mais recentes!</div>
+          <a href="https://instagram.com/nibo.software" target="_blank"
+            style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#833AB4,#FD1D1D);color:#fff;font-size:13px;font-weight:600;padding:10px 24px;border-radius:20px;text-decoration:none;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 8a4 4 0 0 1 4 -4h8a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-8a4 4 0 0 1 -4 -4l0 -8"/><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M16.5 7.5v.01"/></svg>
+            Abrir perfil do Nibo
+          </a>
+        </div>`;
+    }
+  }
+
+  // Init embaixadores and instagram when navigating to those sections
+  const _origNavigate = navigate;
+  function navigate(id, btn, pushState=true) {
+    _origNavigate(id, btn, pushState);
+    if (id === 'embaixadores') renderEmbaixadores();
+    if (id === 'social') loadInstagramPosts();
+  }
+
 </script>
 </body>
 </html>
