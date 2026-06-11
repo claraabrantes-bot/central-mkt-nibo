@@ -732,6 +732,23 @@
         if (launches.length && !activeMonth) activeMonth = launches[0].monthKey;
         renderLaunches();
       });
+      // campanhas
+      campRef = db.ref('campanhas');
+      campRef.on('value', snap => {
+        const data = snap.val();
+        campanhas = data ? Object.entries(data).map(([id,v]) => ({...v, id})) : [];
+        campanhas.sort((a,b) => new Date(a.validade) - new Date(b.validade));
+        renderCampanhas();
+      });
+
+      // instagram posts
+      postsRef = db.ref('instagram_posts');
+      postsRef.on('value', snap => {
+        const data = snap.val();
+        postLinks = data ? [data.p1||'', data.p2||'', data.p3||''] : ['','',''];
+        renderPostEmbeds();
+      });
+
     } catch(e) {
       console.warn('Firebase init error:', e);
     }
@@ -929,16 +946,9 @@
   // ── CAMPANHAS ATIVAS ─────────────────────────────────────────
   let campUnlocked = false;
   let campanhas = [];
-  const campRef = (db && typeof firebase !== 'undefined') ? firebase.database().ref('campanhas') : null;
+  let campRef = null;
 
-  if (campRef) {
-    campRef.on('value', snap => {
-      const data = snap.val();
-      campanhas = data ? Object.entries(data).map(([id,v]) => ({...v, id})) : [];
-      campanhas.sort((a,b) => new Date(a.validade) - new Date(b.validade));
-      renderCampanhas();
-    });
-  }
+  // campRef listener set up in initFirebase
 
   function openCampPinGate() {
     const g = document.getElementById('camp-pin-gate');
@@ -983,6 +993,7 @@
     const entry = { nome, produto, desconto, validade, pecas, ativa: true };
     if (campRef) campRef.push(entry);
     else { campanhas.push({...entry, id: Date.now().toString()}); renderCampanhas(); }
+    // ^ Firebase listener will auto-update UI when campRef fires
     closeCampForm();
   }
   function deleteCampanha(id) {
@@ -1071,18 +1082,11 @@
 
   // ── INSTAGRAM POST EMBEDS ────────────────────────────────────
   let postLinks = ['', '', ''];
-  const postsRef = db ? firebase.database().ref('instagram_posts') : null;
+  let postsRef = null;
 
   function loadPostLinks() {
-    if (postsRef) {
-      postsRef.on('value', snap => {
-        const data = snap.val();
-        postLinks = data ? [data.p1||'', data.p2||'', data.p3||''] : ['','',''];
-        renderPostEmbeds();
-      });
-    } else {
-      renderPostEmbeds();
-    }
+    // listener set up in initFirebase; fallback for offline
+    if (!postsRef) renderPostEmbeds();
   }
 
   function togglePostEditor() {
@@ -1104,11 +1108,8 @@
     const p2 = (document.getElementById('post-url-2')||{}).value || '';
     const p3 = (document.getElementById('post-url-3')||{}).value || '';
     postLinks = [p1, p2, p3];
-    if (postsRef) {
-      postsRef.set({ p1, p2, p3 });
-    } else {
-      renderPostEmbeds();
-    }
+    if (postsRef) postsRef.set({ p1, p2, p3 });
+    else renderPostEmbeds();
     togglePostEditor();
   }
 
