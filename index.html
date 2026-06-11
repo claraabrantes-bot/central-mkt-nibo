@@ -784,7 +784,7 @@
         </div>
         <div class="li-right">
           <span class="tag ${statusMap[l.status][0]}">${statusMap[l.status][1]}</span>
-          ${calUnlocked ? `<button class="li-delete" onclick="deleteLaunch('${l.id}')"><span class="ico ico-16">${SVG.trash}</span></button>` : ''}
+          ${calUnlocked ? '<button class="li-delete" onclick="deleteLaunch(\'' + l.id + '\')"><span class="ico ico-16">' + SVG.trash + '</span></button>' : ''}
         </div>
       </div>`;
     }).join('');
@@ -857,14 +857,6 @@
           </a>
         </div>`;
     }
-  }
-
-  // Init embaixadores and instagram when navigating to those sections
-  const _origNavigate = navigate;
-  function navigate(id, btn, pushState=true) {
-    _origNavigate(id, btn, pushState);
-    if (id === 'embaixadores') renderEmbaixadores();
-    if (id === 'social') loadInstagramPosts();
   }
 
 </script>
