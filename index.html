@@ -727,9 +727,26 @@
       launchesRef = db.ref('launches');
       launchesRef.on('value', snap => {
         const data = snap.val();
-        launches = data ? Object.entries(data).map(([id, v]) => ({...v, id})) : [];
+        launches = data ? Object.entries(data).map(([id, v]) => {
+          const entry = {...v, id};
+          // Rebuild derived fields in case they are missing
+          if (entry.date) {
+            const d = new Date(entry.date + 'T12:00:00');
+            if (!entry.monthKey)    entry.monthKey    = entry.date.slice(0,7);
+            if (!entry.day)         entry.day         = d.getDate();
+            if (!entry.month)       entry.month       = d.toLocaleString('pt-BR',{month:'short'}).replace('.','');
+            if (!entry.monthLabel)  entry.monthLabel  = d.toLocaleString('pt-BR',{month:'long',year:'numeric'});
+          }
+          if (!entry.status) entry.status = 'planejado';
+          return entry;
+        }) : [];
         launches.sort((a,b) => new Date(a.date) - new Date(b.date));
-        if (launches.length && !activeMonth) activeMonth = launches[0].monthKey;
+        if (launches.length && (!activeMonth || !launches.find(l=>l.monthKey===activeMonth))) {
+          // default to current month if possible, else first
+          const now = new Date().toISOString().slice(0,7);
+          activeMonth = launches.find(l=>l.monthKey===now) ? now : launches[0].monthKey;
+          activeYear  = parseInt(activeMonth.slice(0,4));
+        }
         renderLaunches();
       });
       // campanhas
