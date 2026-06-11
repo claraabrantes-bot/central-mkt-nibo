@@ -1018,60 +1018,77 @@
     });
     renderMonthTabs(months);
     setTimeout(updateActiveMonthLabel, 50);
-    var sc = {"planejado":["#EBF4FF","#185FA5"],"em breve":["#FEF3C7","#92400E"],"entregue":["#EAF3DE","#3B6D11"]};
+    var SC = {planejado:["#EBF4FF","#185FA5"],"em breve":["#FEF3C7","#92400E"],entregue:["#EAF3DE","#3B6D11"]};
     var allMonths = Object.keys(months).sort();
     var out = "";
     allMonths.forEach(function(mk) {
       var d = new Date(mk+"-01T12:00:00");
       var lbl = d.toLocaleString("pt-BR",{month:"long",year:"numeric"});
       lbl = lbl.charAt(0).toUpperCase()+lbl.slice(1);
-      var isAct = mk === activeMonth;
-      var col = isAct ? "#0072CE" : "#9ca3af";
-      out += '<div style="font-size:11px;font-weight:600;color:'+col+';text-transform:uppercase;letter-spacing:0.8px;margin:16px 0 8px;">'+lbl+'</div>';
-      out += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;">';
+      var col = mk === activeMonth ? "#0072CE" : "#9ca3af";
+      out += "<div style=\"font-size:11px;font-weight:600;color:"+col+";text-transform:uppercase;letter-spacing:0.8px;margin:16px 0 8px;\">"+lbl+"</div>";
+      out += "<div style=\"display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;\">";
       months[mk].items.forEach(function(l) {
         if (editingLaunchId === l.id) {
-          out += '<div style="background:#fff;border:0.5px solid #0072CE;border-radius:14px;padding:18px;grid-column:1/-1;">';
-          out += '<div style="font-size:13px;font-weight:600;color:#1a1a2e;margin-bottom:14px;">Editar lan&ccedil;amento</div>';
-          out += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">';
-          out += '<div><label style="font-size:11px;color:#6b7280;display:block;margin-bottom:3px;">Nome *</label>';
-          out += '<input id="edit-name" value="'+l.name.replace(/"/g,"&quot;")+'" style="width:100%;font-size:12px;font-family:Poppins,sans-serif;padding:8px 10px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;box-sizing:border-box;"></div>';
-          out += '<div><label style="font-size:11px;color:#6b7280;display:block;margin-bottom:3px;">Data *</label>';
-          out += '<input id="edit-date" type="date" value="'+l.date+'" style="width:100%;font-size:12px;font-family:Poppins,sans-serif;padding:8px 10px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;box-sizing:border-box;"></div></div>';
-          out += '<div style="margin-bottom:10px;"><label style="font-size:11px;color:#6b7280;display:block;margin-bottom:3px;">Descri&ccedil;&atilde;o</label>';
-          out += '<input id="edit-desc" value="'+((l.desc||"").replace(/"/g,"&quot;"))+'" style="width:100%;font-size:12px;font-family:Poppins,sans-serif;padding:8px 10px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;box-sizing:border-box;"></div>';
-          out += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">';
-          out += '<div><label style="font-size:11px;color:#6b7280;display:block;margin-bottom:3px;">Link doc</label>';
-          out += '<input id="edit-link" value="'+((l.link||"").replace(/"/g,"&quot;"))+'" style="width:100%;font-size:12px;font-family:Poppins,sans-serif;padding:8px 10px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;box-sizing:border-box;"></div>';
-          out += '<div><label style="font-size:11px;color:#6b7280;display:block;margin-bottom:3px;">Status</label>';
-          out += '<select id="edit-status" style="width:100%;font-size:12px;font-family:Poppins,sans-serif;padding:8px 10px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;box-sizing:border-box;">';
-          out += '<option value="planejado"'+( l.status==="planejado"?" selected":"")+">"+"Planejado</option>";
-          out += '<option value="em breve"'+( l.status==="em breve"?" selected":"")+">"+"Em breve</option>";
-          out += '<option value="entregue"'+( l.status==="entregue"?" selected":"")+">"+"Entregue</option>";
-          out += "</select></div></div>";
-          out += '<div style="display:flex;gap:8px;">';
-          out += buildSaveBtn(l.id);
-          out += '<button class="btn-cancel" onclick="cancelLaunchEdit()">Cancelar</button></div></div>';
+          out += buildEditForm(l);
           return;
         }
-        var c = sc[l.status] || ["#f4f5f7","#6b7280"];
-        var ds = new Date(l.date+"T12:00:00").toLocaleDateString("pt-BR",{day:"2-digit",month:"short",year:"numeric"});
-        out += '<div style="background:#fff;border:0.5px solid #e2e4e9;border-radius:14px;overflow:hidden;">';
-        out += '<div style="height:5px;background:#0072CE;"></div><div style="padding:16px 18px;">';
-        out += '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px;">';
-        out += '<div style="font-size:15px;font-weight:700;color:#1a1a2e;">'+l.name+"</div>";
-        out += '<span style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;background:'+c[0]+';color:'+c[1]+";">"+(l.status||"")+"</span></div>";
-        if (l.desc) out += '<div style="font-size:12.5px;color:#6b7280;line-height:1.6;margin-bottom:8px;">'+l.desc+"</div>";
-        out += '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">';
-        out += '<div style="display:flex;align-items:center;gap:5px;font-size:12px;color:#9ca3af;"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12"/><path d="M16 3l0 4"/><path d="M8 3l0 4"/><path d="M4 11l16 0"/></svg> '+ds+"</div>";
-        out += '<div style="display:flex;align-items:center;gap:6px;">';
-        if (l.link) out += '<a href="'+l.link+'" target="_blank" style="display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:500;color:#0072CE;background:#EBF4FF;padding:5px 10px;border-radius:6px;text-decoration:none;"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2"/></svg> Ver doc</a>';
-        out += launchEditBtns(l.id);
-        out += "</div></div></div></div>";
+        out += buildLaunchCard(l);
       });
       out += "</div>";
     });
     if (list) list.innerHTML = out;
+  }
+
+  function buildEditForm(l) {
+    return "<div style=\"background:#fff;border:1px solid #0072CE;border-radius:14px;padding:18px;grid-column:1/-1;\">"
+      + "<div style=\"font-size:13px;font-weight:600;color:#1a1a2e;margin-bottom:14px;\">Editar lançamento</div>"
+      + "<div style=\"display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;\">"
+        + "<div><label style=\"font-size:11px;color:#6b7280;display:block;margin-bottom:3px;\">Nome *</label>"
+          + "<input id=\"edit-name\" value=\""+l.name.replace(/"/g,"&quot;")+"\" style=\"width:100%;font-size:12px;font-family:Poppins,sans-serif;padding:8px 10px;border-radius:8px;border:1px solid #d1d5db;outline:none;box-sizing:border-box;\"></div>"
+        + "<div><label style=\"font-size:11px;color:#6b7280;display:block;margin-bottom:3px;\">Data *</label>"
+          + "<input id=\"edit-date\" type=\"date\" value=\""+l.date+"\" style=\"width:100%;font-size:12px;font-family:Poppins,sans-serif;padding:8px 10px;border-radius:8px;border:1px solid #d1d5db;outline:none;box-sizing:border-box;\"></div>"
+      + "</div>"
+      + "<div style=\"margin-bottom:10px;\"><label style=\"font-size:11px;color:#6b7280;display:block;margin-bottom:3px;\">Descrição</label>"
+        + "<input id=\"edit-desc\" value=\""+(l.desc||"").replace(/"/g,"&quot;")+"\" style=\"width:100%;font-size:12px;font-family:Poppins,sans-serif;padding:8px 10px;border-radius:8px;border:1px solid #d1d5db;outline:none;box-sizing:border-box;\"></div>"
+      + "<div style=\"display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;\">"
+        + "<div><label style=\"font-size:11px;color:#6b7280;display:block;margin-bottom:3px;\">Link doc</label>"
+          + "<input id=\"edit-link\" value=\""+(l.link||"").replace(/"/g,"&quot;")+"\" style=\"width:100%;font-size:12px;font-family:Poppins,sans-serif;padding:8px 10px;border-radius:8px;border:1px solid #d1d5db;outline:none;box-sizing:border-box;\"></div>"
+        + "<div><label style=\"font-size:11px;color:#6b7280;display:block;margin-bottom:3px;\">Status</label>"
+          + "<select id=\"edit-status\" style=\"width:100%;font-size:12px;font-family:Poppins,sans-serif;padding:8px 10px;border-radius:8px;border:1px solid #d1d5db;outline:none;box-sizing:border-box;\">"
+          + "<option value=\"planejado\"" + (l.status==="planejado"?" selected":"") + ">Planejado</option>"
+          + "<option value=\"em breve\"" + (l.status==="em breve"?" selected":"") + ">Em breve</option>"
+          + "<option value=\"entregue\"" + (l.status==="entregue"?" selected":"") + ">Entregue</option>"
+          + "</select></div>"
+      + "</div>"
+      + "<div style=\"display:flex;gap:8px;\">"
+        + "<button class=\"btn-solid\" data-id=\""+l.id+"\" onclick=\"saveLaunchEdit(this.dataset.id)\">Salvar</button>"
+        + "<button class=\"btn-cancel\" onclick=\"cancelLaunchEdit()\">Cancelar</button>"
+      + "</div>"
+    + "</div>";
+  }
+
+  function buildLaunchCard(l) {
+    var SC = {planejado:["#EBF4FF","#185FA5"],"em breve":["#FEF3C7","#92400E"],entregue:["#EAF3DE","#3B6D11"]};
+    var c = SC[l.status] || ["#f4f5f7","#6b7280"];
+    var ds = new Date(l.date+"T12:00:00").toLocaleDateString("pt-BR",{day:"2-digit",month:"short",year:"numeric"});
+    return "<div style=\"background:#fff;border:1px solid #e2e4e9;border-radius:14px;overflow:hidden;\">"
+      + "<div style=\"height:5px;background:#0072CE;\"></div>"
+      + "<div style=\"padding:16px 18px;\">"
+        + "<div style=\"display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px;\">"
+          + "<div style=\"font-size:15px;font-weight:700;color:#1a1a2e;\">"+l.name+"</div>"
+          + "<span style=\"font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;background:"+c[0]+";color:"+c[1]+";\">"+(l.status||"")+"</span>"
+        + "</div>"
+        + (l.desc ? "<div style=\"font-size:12.5px;color:#6b7280;line-height:1.6;margin-bottom:8px;\">"+l.desc+"</div>" : "")
+        + "<div style=\"display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;\">"
+          + "<div style=\"font-size:12px;color:#9ca3af;\">📅 "+ds+"</div>"
+          + "<div style=\"display:flex;align-items:center;gap:6px;\">"
+            + (l.link ? "<a href=\""+l.link+"\" target=\"_blank\" style=\"font-size:12px;font-weight:500;color:#0072CE;background:#EBF4FF;padding:5px 10px;border-radius:6px;text-decoration:none;\">Ver doc</a>" : "")
+            + launchEditBtns(l.id)
+          + "</div>"
+        + "</div>"
+      + "</div>"
+    + "</div>";
   }
 
   function openCampPinGate() {
