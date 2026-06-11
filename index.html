@@ -179,6 +179,9 @@
       <button class="nav-item" onclick="navigate('produto',this)">
         <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3l8 4.5l0 9l-8 4.5l-8 -4.5l0 -9l8 -4.5"/><path d="M12 12l8 -4.5"/><path d="M12 12l0 9"/><path d="M12 12l-8 -4.5"/></svg></span> Calendário de Produto
       </button>
+      <button class="nav-item" onclick="navigate('campanhas',this)">
+        <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 5m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z"/><path d="M9 12l2 2l4 -4"/></svg></span> Campanhas Ativas
+      </button>
       <button class="nav-item" onclick="navigate('social',this)">
         <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 8a4 4 0 0 1 4 -4h8a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-8a4 4 0 0 1 -4 -4l0 -8"/><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M16.5 7.5v.01"/></svg></span> Redes Sociais
       </button>
@@ -249,9 +252,6 @@
       <!-- CALENDÁRIO -->
       <div class="section" id="section-produto">
 
-        <!-- ALERTAS 7 DIAS -->
-        <div id="alerts-wrap"></div>
-
         <!-- PIN GATE -->
         <div id="pin-gate" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:999;align-items:center;justify-content:center;">
           <div style="background:#fff;border-radius:16px;padding:32px 28px;max-width:320px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
@@ -321,6 +321,83 @@
         <div class="empty-launch" id="launch-empty">
           <div class="ico ico-30" style="display:flex;justify-content:center;margin-bottom:10px;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12"/><path d="M16 3l0 4"/><path d="M8 3l0 4"/><path d="M4 11l16 0"/><path d="M8 15h2v2h-2l0 -2"/></svg></div>
           Nenhum lançamento cadastrado ainda.<br>Clique em "Adicionar" para começar.
+        </div>
+      </div>
+
+      <!-- CAMPANHAS ATIVAS -->
+      <div class="section" id="section-campanhas">
+
+        <!-- PIN GATE campanhas (same PIN as produto) -->
+        <div id="camp-pin-gate" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:999;align-items:center;justify-content:center;">
+          <div style="background:#fff;border-radius:16px;padding:32px 28px;max-width:320px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+            <div style="font-size:22px;margin-bottom:12px;">🔐</div>
+            <div style="font-size:15px;font-weight:600;color:#1a1a2e;margin-bottom:6px;">Área restrita</div>
+            <div style="font-size:13px;color:#6b7280;margin-bottom:20px;">Digite o PIN do time de marketing para editar campanhas.</div>
+            <input type="password" id="camp-pin-input" maxlength="6" placeholder="••••••"
+              style="width:100%;font-size:20px;letter-spacing:8px;text-align:center;padding:10px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;font-family:Poppins,sans-serif;margin-bottom:10px;"
+              onkeydown="if(event.key==='Enter')checkCampPin()" />
+            <div id="camp-pin-error" style="font-size:12px;color:#E24B4A;margin-bottom:10px;display:none;">PIN incorreto.</div>
+            <div style="display:flex;gap:8px;">
+              <button onclick="closeCampPinGate()" class="btn-cancel" style="flex:1;">Cancelar</button>
+              <button onclick="checkCampPin()" class="btn-solid" style="flex:1;justify-content:center;">Entrar</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:#1a1a2e;">Campanhas em andamento</div>
+            <div style="font-size:12px;color:#6b7280;margin-top:2px;">Produto, desconto, peças e validade de cada campanha ativa.</div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button id="camp-lock-btn" class="btn-cancel" onclick="openCampPinGate()" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;">🔒 Editar</button>
+            <button id="camp-unlock-btn" class="btn-solid" onclick="openCampForm()" style="display:none;">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+              Nova campanha
+            </button>
+            <button id="camp-relock-btn" class="btn-cancel" onclick="lockCamp()" style="display:none;font-size:12px;">🔒 Bloquear</button>
+          </div>
+        </div>
+
+        <!-- FORM nova campanha -->
+        <div id="camp-form" style="display:none;background:#fff;border:0.5px solid #0072CE;border-radius:12px;padding:20px;margin-bottom:16px;">
+          <h3 style="font-size:13px;font-weight:600;color:#1a1a2e;margin-bottom:16px;">Nova campanha</h3>
+          <div class="form-row">
+            <div><label>Nome da campanha *</label><input type="text" id="cf-nome" placeholder="Ex: 30% OFF Ecossistema"/></div>
+            <div><label>Produto *</label>
+              <select id="cf-produto">
+                <option value="">Selecione...</option>
+                <option>Obrigações Plus</option>
+                <option>Gestão Financeira</option>
+                <option>BPO</option>
+                <option>Radar e-CAC</option>
+                <option>Nibo Emissor</option>
+                <option>Conciliador Open Finance</option>
+                <option>Meu App</option>
+                <option>Todos os produtos</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div><label>Desconto / Oferta</label><input type="text" id="cf-desconto" placeholder="Ex: 30% OFF nos 3 primeiros meses"/></div>
+            <div><label>Válida até *</label><input type="date" id="cf-validade"/></div>
+          </div>
+          <div class="form-row single">
+            <div><label>Links das peças (um por linha)</label>
+              <textarea id="cf-pecas" placeholder="https://drive.google.com/...&#10;https://canva.com/...&#10;https://..." style="min-height:80px;"></textarea>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn-solid" onclick="saveCampanha()">Salvar campanha</button>
+            <button class="btn-cancel" onclick="closeCampForm()">Cancelar</button>
+          </div>
+        </div>
+
+        <!-- LISTA de campanhas -->
+        <div id="camp-list" style="display:flex;flex-direction:column;gap:12px;"></div>
+        <div id="camp-empty" style="text-align:center;padding:48px 20px;color:#9ca3af;font-size:13px;">
+          <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#d1d5db" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin:0 auto 10px;"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 5m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z"/><path d="M9 12l2 2l4 -4"/></svg>
+          Nenhuma campanha ativa cadastrada.<br>Clique em "Editar" para adicionar.
         </div>
       </div>
 
@@ -519,6 +596,7 @@
   const pageInfo = {
     inicio:   ['Início',                'Acesso rápido às ferramentas do time'],
     produto:  ['Calendário de Produto', 'Lançamentos e datas para comunicação'],
+    campanhas:['Campanhas Ativas',    'Campanhas em andamento por produto'],
     social:   ['Redes Sociais',   'Calendário editorial nas redes'],
     arquivos: ['Pasta de Arquivos',     'Links centralizados para o time'],
     embaixadores:['Embaixadores', 'Links e materiais dos embaixadores'],
@@ -610,7 +688,7 @@
   }
 
   function goToNav(id) {
-    const map = { produto:1, social:2, arquivos:3, embaixadores:4 };
+    const map = { produto:1, campanhas:2, social:3, arquivos:4, embaixadores:5 };
     navigate(id, document.querySelectorAll('.nav-item')[map[id]]);
   }
 
@@ -848,6 +926,149 @@
     }).join('');
   }
 
+  // ── CAMPANHAS ATIVAS ─────────────────────────────────────────
+  let campUnlocked = false;
+  let campanhas = [];
+  const campRef = (db && typeof firebase !== 'undefined') ? firebase.database().ref('campanhas') : null;
+
+  if (campRef) {
+    campRef.on('value', snap => {
+      const data = snap.val();
+      campanhas = data ? Object.entries(data).map(([id,v]) => ({...v, id})) : [];
+      campanhas.sort((a,b) => new Date(a.validade) - new Date(b.validade));
+      renderCampanhas();
+    });
+  }
+
+  function openCampPinGate() {
+    const g = document.getElementById('camp-pin-gate');
+    if (g) { g.style.display = 'flex'; document.getElementById('camp-pin-input').value = ''; document.getElementById('camp-pin-error').style.display = 'none'; setTimeout(()=>document.getElementById('camp-pin-input').focus(),100); }
+  }
+  function closeCampPinGate() {
+    const g = document.getElementById('camp-pin-gate'); if (g) g.style.display = 'none';
+  }
+  function checkCampPin() {
+    if (document.getElementById('camp-pin-input').value === CORRECT_PIN) {
+      campUnlocked = true; closeCampPinGate();
+      document.getElementById('camp-lock-btn').style.display = 'none';
+      document.getElementById('camp-unlock-btn').style.display = 'inline-flex';
+      document.getElementById('camp-relock-btn').style.display = 'inline-flex';
+    } else {
+      document.getElementById('camp-pin-error').style.display = 'block';
+      document.getElementById('camp-pin-input').value = '';
+    }
+  }
+  function lockCamp() {
+    campUnlocked = false;
+    document.getElementById('camp-lock-btn').style.display = 'inline-flex';
+    document.getElementById('camp-unlock-btn').style.display = 'none';
+    document.getElementById('camp-relock-btn').style.display = 'none';
+    closeCampForm();
+  }
+  function openCampForm() {
+    const f = document.getElementById('camp-form'); if (f) f.style.display = 'block';
+    ['cf-nome','cf-desconto','cf-validade','cf-pecas'].forEach(id => { const e = document.getElementById(id); if(e) e.value=''; });
+    document.getElementById('cf-produto').value = '';
+  }
+  function closeCampForm() {
+    const f = document.getElementById('camp-form'); if (f) f.style.display = 'none';
+  }
+  function saveCampanha() {
+    const nome     = (document.getElementById('cf-nome')||{}).value?.trim();
+    const produto  = (document.getElementById('cf-produto')||{}).value;
+    const desconto = (document.getElementById('cf-desconto')||{}).value?.trim();
+    const validade = (document.getElementById('cf-validade')||{}).value;
+    const pecas    = (document.getElementById('cf-pecas')||{}).value?.trim();
+    if (!nome || !validade) { alert('Preencha nome e validade.'); return; }
+    const entry = { nome, produto, desconto, validade, pecas, ativa: true };
+    if (campRef) campRef.push(entry);
+    else { campanhas.push({...entry, id: Date.now().toString()}); renderCampanhas(); }
+    closeCampForm();
+  }
+  function deleteCampanha(id) {
+    if (!campUnlocked) return;
+    if (campRef) campRef.child(id).remove();
+    else { campanhas = campanhas.filter(c => c.id !== id); renderCampanhas(); }
+  }
+  function togglePecas(id) {
+    const el = document.getElementById('pecas-'+id);
+    if (!el) return;
+    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  }
+
+  const PRODUCT_COLORS = {
+    'Obrigações Plus':         '#0072CE',
+    'Gestão Financeira':       '#1D9E75',
+    'BPO':                     '#9333EA',
+    'Radar e-CAC':             '#EA580C',
+    'Nibo Emissor':            '#DC2626',
+    'Conciliador Open Finance':'#0891B2',
+    'Meu App':                 '#D97706',
+    'Todos os produtos':       '#374151',
+  };
+
+  function daysLeft(dateStr) {
+    const today = new Date(); today.setHours(0,0,0,0);
+    const d = new Date(dateStr+'T00:00:00'); d.setHours(0,0,0,0);
+    return Math.round((d-today)/86400000);
+  }
+
+  function renderCampanhas() {
+    const list  = document.getElementById('camp-list');
+    const empty = document.getElementById('camp-empty');
+    if (!list) return;
+    if (!campanhas.length) { list.innerHTML=''; if(empty) empty.style.display='block'; return; }
+    if (empty) empty.style.display='none';
+    list.innerHTML = campanhas.map(c => {
+      const dl = daysLeft(c.validade);
+      const expired = dl < 0;
+      const urgent  = dl >= 0 && dl <= 5;
+      const color   = PRODUCT_COLORS[c.produto] || '#374151';
+      const d = new Date(c.validade+'T12:00:00');
+      const validadeStr = d.toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'numeric'});
+      const badgeStyle = expired
+        ? 'background:#FEE2E2;color:#991B1B;'
+        : urgent
+          ? 'background:#FEF3C7;color:#92400E;'
+          : 'background:#EAF3DE;color:#3B6D11;';
+      const badgeText = expired ? 'Encerrada' : dl === 0 ? 'Encerra hoje' : dl === 1 ? 'Encerra amanhã' : `Encerra em ${dl} dias`;
+
+      const pecaLinks = (c.pecas||'').split('\n').map(l=>l.trim()).filter(Boolean);
+      const pecasHtml = pecaLinks.length ? pecaLinks.map((link,i) => `
+        <a href="${link}" target="_blank" style="display:flex;align-items:center;gap:6px;font-size:12px;color:#0072CE;text-decoration:none;padding:6px 10px;background:#f4f5f7;border-radius:6px;">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2"/></svg>
+          Peça ${i+1}
+        </a>`).join('') : '<div style="font-size:12px;color:#9ca3af;">Nenhuma peça cadastrada.</div>';
+
+      return `
+        <div style="background:#fff;border:0.5px solid ${expired?'#FCA5A5':'#e2e4e9'};border-radius:12px;overflow:hidden;opacity:${expired?'0.7':'1'};">
+          <div style="padding:14px 16px;display:flex;align-items:flex-start;gap:12px;">
+            <div style="width:4px;min-height:48px;border-radius:4px;background:${color};flex-shrink:0;margin-top:2px;"></div>
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;">
+                <span style="font-size:13.5px;font-weight:600;color:#1a1a2e;">${c.nome}</span>
+                ${c.produto ? `<span style="font-size:10px;font-weight:600;color:${color};background:${color}18;padding:2px 8px;border-radius:20px;">${c.produto}</span>` : ''}
+              </div>
+              ${c.desconto ? `<div style="font-size:12px;color:#6b7280;margin-bottom:6px;">🏷️ ${c.desconto}</div>` : ''}
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                <span style="font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px;${badgeStyle}">${badgeText}</span>
+                <span style="font-size:11px;color:#9ca3af;">até ${validadeStr}</span>
+              </div>
+            </div>
+            <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">
+              ${pecaLinks.length ? `<button onclick="togglePecas('${c.id}')" style="font-size:11px;font-weight:500;color:#0072CE;background:#EBF4FF;border:none;border-radius:6px;padding:5px 10px;cursor:pointer;font-family:Poppins,sans-serif;">📁 ${pecaLinks.length} peça${pecaLinks.length>1?'s':''}</button>` : ''}
+              ${campUnlocked ? `<button onclick="deleteCampanha('${c.id}')" style="background:none;border:none;cursor:pointer;color:#d1d5db;font-size:14px;display:flex;" title="Remover"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7l16 0"/><path d="M10 11l0 6"/><path d="M14 11l0 6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/></svg></button>` : ''}
+            </div>
+          </div>
+          ${pecaLinks.length ? `
+          <div id="pecas-${c.id}" style="display:none;border-top:0.5px solid #f0f0f0;padding:12px 16px;">
+            <div style="font-size:11px;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">Peças da campanha</div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">${pecasHtml}</div>
+          </div>` : ''}
+        </div>`;
+    }).join('');
+  }
+
   // ── INSTAGRAM POST EMBEDS ────────────────────────────────────
   let postLinks = ['', '', ''];
   const postsRef = db ? firebase.database().ref('instagram_posts') : null;
@@ -929,6 +1150,7 @@
     renderCards();
     renderLaunches();
     loadPostLinks();
+    renderCampanhas();
     // restore hash navigation
     const hash = location.hash.replace('#','') || 'inicio';
     if (pageInfo[hash]) navigate(hash, null, false);
