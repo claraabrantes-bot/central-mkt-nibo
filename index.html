@@ -786,6 +786,7 @@
     const status = (document.getElementById('edit-status')||{}).value;
     if (!name || !date) { alert('Preencha nome e data.'); return; }
     const d = new Date(date+'T12:00:00');
+    activeMonth = date.slice(0,7);
     const updates = { name, date, desc, link, status,
       day: d.getDate(), monthKey: date.slice(0,7),
       month: d.toLocaleString('pt-BR',{month:'short'}).replace('.',''),
@@ -873,7 +874,6 @@
       monthLabel: d.toLocaleString('pt-BR',{month:'long',year:'numeric'})
     };
     activeMonth = monthKey;
-    activeYear  = parseInt(date.slice(0,4));
     if (launchesRef) launchesRef.push(entry); else { launches.push({...entry, id: Date.now().toString()}); launches.sort((a,b)=>new Date(a.date)-new Date(b.date)); renderLaunches(); }
     ['f-name','f-date','f-desc','f-link'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('f-status').value = 'planejado';
@@ -885,7 +885,7 @@
   }
 
   // Track displayed year separately
-  const activeYear = 2026;
+  let activeYear = 2026;
 
   function goToToday() {
     const now = new Date();
