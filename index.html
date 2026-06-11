@@ -725,33 +725,36 @@
         const data = snap.val();
         launches = data ? Object.entries(data).map(([id, v]) => {
           const entry = {...v, id};
-          // Rebuild derived fields in case they are missing
           if (entry.date) {
             const d = new Date(entry.date + 'T12:00:00');
-            if (!entry.monthKey)    entry.monthKey    = entry.date.slice(0,7);
-            if (!entry.day)         entry.day         = d.getDate();
-            if (!entry.month)       entry.month       = d.toLocaleString('pt-BR',{month:'short'}).replace('.','');
-            if (!entry.monthLabel)  entry.monthLabel  = d.toLocaleString('pt-BR',{month:'long',year:'numeric'});
+            entry.monthKey   = entry.date.slice(0,7);
+            entry.day        = d.getDate();
+            entry.month      = d.toLocaleString('pt-BR',{month:'short'}).replace('.','');
+            entry.monthLabel = d.toLocaleString('pt-BR',{month:'long',year:'numeric'});
           }
           if (!entry.status) entry.status = 'planejado';
           return entry;
         }) : [];
         launches.sort((a,b) => new Date(a.date) - new Date(b.date));
-        if (launches.length && (!activeMonth || !launches.find(l=>l.monthKey===activeMonth))) {
-          // default to current month if possible, else first
-          const now = new Date().toISOString().slice(0,7);
-          // Set activeMonth to current month if has data, else first launch
-          // BUT keep activeYear as current year (2026) — user can navigate with arrows
-          const nowYear = new Date().getFullYear().toString();
-          if (launches.find(l=>l.monthKey===now)) {
+
+        // Set activeMonth to current month if possible, else first launch
+        // activeYear stays as current year UNLESS no launches exist in current year
+        const now = new Date().toISOString().slice(0,7);
+        const curYear = new Date().getFullYear().toString();
+        if (!activeMonth) {
+          if (launches.find(l => l.monthKey === now)) {
             activeMonth = now;
-          } else if (launches.find(l=>l.monthKey && l.monthKey.startsWith(nowYear))) {
-            activeMonth = launches.find(l=>l.monthKey && l.monthKey.startsWith(nowYear)).monthKey;
+            activeYear = parseInt(curYear);
           } else {
-            activeMonth = launches[0].monthKey;
-            activeYear = parseInt(activeMonth.slice(0,4));
+            const thisYearLaunch = launches.find(l => l.monthKey && l.monthKey.startsWith(curYear));
+            if (thisYearLaunch) {
+              activeMonth = thisYearLaunch.monthKey;
+              activeYear = parseInt(curYear);
+            } else if (launches.length) {
+              activeMonth = launches[0].monthKey;
+              activeYear = parseInt(activeMonth.slice(0,4));
+            }
           }
-          activeYear  = parseInt(activeMonth.slice(0,4));
         }
         renderLaunches();
       });
