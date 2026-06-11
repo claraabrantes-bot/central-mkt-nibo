@@ -772,6 +772,32 @@
     }
   }
 
+  let editingLaunchId = null;
+
+  function startLaunchEdit(id) { editingLaunchId = id; renderLaunches(); }
+  function cancelLaunchEdit() { editingLaunchId = null; renderLaunches(); }
+  function saveLaunchEdit(id) {
+    const name   = (document.getElementById('edit-name')||{}).value?.trim();
+    const date   = (document.getElementById('edit-date')||{}).value;
+    const desc   = (document.getElementById('edit-desc')||{}).value?.trim();
+    const link   = (document.getElementById('edit-link')||{}).value?.trim();
+    const status = (document.getElementById('edit-status')||{}).value;
+    if (!name || !date) { alert('Preencha nome e data.'); return; }
+    const d = new Date(date+'T12:00:00');
+    const updates = { name, date, desc, link, status,
+      day: d.getDate(), monthKey: date.slice(0,7),
+      month: d.toLocaleString('pt-BR',{month:'short'}).replace('.',''),
+      monthLabel: d.toLocaleString('pt-BR',{month:'long',year:'numeric'})
+    };
+    if (launchesRef) launchesRef.child(id).update(updates);
+    else {
+      const l = launches.find(x=>x.id===id);
+      if (l) Object.assign(l, updates);
+      renderLaunches();
+    }
+    editingLaunchId = null;
+  }
+
   const CORRECT_PIN = '082026';
   let calUnlocked = false;
 
@@ -946,6 +972,33 @@
     list.innerHTML = items.map((l,i) => {
       const days = daysUntil(l.date);
       const isAlert = days >= 0 && days <= 7;
+      const editingThis = editingLaunchId === l.id;
+      if (editingThis) {
+        return `<div class="launch-item" style="display:block;padding:16px;">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+            <div><label style="font-size:11px;color:#6b7280;display:block;margin-bottom:3px;">Nome</label>
+              <input id="edit-name" value="${l.name}" style="width:100%;font-size:12px;font-family:Poppins,sans-serif;padding:7px 10px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;"></div>
+            <div><label style="font-size:11px;color:#6b7280;display:block;margin-bottom:3px;">Data</label>
+              <input id="edit-date" type="date" value="${l.date}" style="width:100%;font-size:12px;font-family:Poppins,sans-serif;padding:7px 10px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;"></div>
+          </div>
+          <div style="margin-bottom:8px;"><label style="font-size:11px;color:#6b7280;display:block;margin-bottom:3px;">Descrição</label>
+            <input id="edit-desc" value="${l.desc||''}" style="width:100%;font-size:12px;font-family:Poppins,sans-serif;padding:7px 10px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+            <div><label style="font-size:11px;color:#6b7280;display:block;margin-bottom:3px;">Link do doc</label>
+              <input id="edit-link" value="${l.link||''}" style="width:100%;font-size:12px;font-family:Poppins,sans-serif;padding:7px 10px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;"></div>
+            <div><label style="font-size:11px;color:#6b7280;display:block;margin-bottom:3px;">Status</label>
+              <select id="edit-status" style="width:100%;font-size:12px;font-family:Poppins,sans-serif;padding:7px 10px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;">
+                <option value="planejado" ${l.status==='planejado'?'selected':''}>Planejado</option>
+                <option value="em breve" ${l.status==='em breve'?'selected':''}>Em breve</option>
+                <option value="entregue" ${l.status==='entregue'?'selected':''}>Entregue</option>
+              </select></div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn-solid" onclick="saveLaunchEdit('${l.id}')">Salvar</button>
+            <button class="btn-cancel" onclick="cancelLaunchEdit()">Cancelar</button>
+          </div>
+        </div>`;
+      }
       return `<div class="launch-item${isAlert?' alert-item':''}">
         <div class="li-date"><span class="li-day">${l.day}</span>${l.month}</div>
         <div>
@@ -955,7 +1008,10 @@
         </div>
         <div class="li-right">
           <span class="tag ${statusMap[l.status][0]}">${statusMap[l.status][1]}</span>
-          ${calUnlocked ? '<button class="li-delete" onclick="deleteLaunch(\'' + l.id + '\')"><span class="ico ico-16">' + SVG.trash + '</span></button>' : ''}
+          ${calUnlocked ? `<div style="display:flex;gap:4px;">
+            <button onclick="startLaunchEdit('${l.id}')" style="background:none;border:none;cursor:pointer;color:#6b7280;display:flex;padding:4px;" title="Editar"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"/><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"/></svg></button>
+            <button onclick="deleteLaunch('${l.id}')" style="background:none;border:none;cursor:pointer;color:#6b7280;display:flex;padding:4px;" title="Apagar"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7l16 0"/><path d="M10 11l0 6"/><path d="M14 11l0 6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/></svg></button>
+          </div>` : ''}
         </div>
       </div>`;
     }).join('');
@@ -1167,9 +1223,7 @@
   // ── Init on DOM ready ────────────────────────────────────────
   function initApp() {
     renderCards();
-    renderLaunches();
     loadPostLinks();
-    renderCampanhas();
     // restore hash navigation
     const hash = location.hash.replace('#','') || 'inicio';
     if (pageInfo[hash]) navigate(hash, null, false);
