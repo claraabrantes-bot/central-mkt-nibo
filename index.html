@@ -350,12 +350,17 @@
         </div>
 
         <!-- FORM nova campanha -->
-        <div id="camp-form" style="display:none;background:#fff;border:0.5px solid #0072CE;border-radius:12px;padding:20px;margin-bottom:16px;">
-          <h3 style="font-size:13px;font-weight:600;color:#1a1a2e;margin-bottom:16px;">Nova campanha</h3>
-          <div class="form-row">
-            <div><label>Nome da campanha *</label><input type="text" id="cf-nome" placeholder="Ex: 30% OFF Ecossistema"/></div>
-            <div><label>Produto *</label>
-              <select id="cf-produto">
+        <div id="camp-form" style="display:none;background:#fff;border:0.5px solid #0072CE;border-radius:14px;padding:22px;margin-bottom:16px;">
+          <div style="font-size:14px;font-weight:600;color:#1a1a2e;margin-bottom:18px;">Nova campanha</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+            <div style="grid-column:1/-1;">
+              <label style="font-size:11px;font-weight:500;color:#6b7280;display:block;margin-bottom:4px;">Nome da campanha *</label>
+              <input type="text" id="cf-nome" placeholder="Ex: 30% OFF Ecossistema"
+                style="width:100%;font-size:13px;font-family:Poppins,sans-serif;padding:9px 12px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;box-sizing:border-box;" />
+            </div>
+            <div>
+              <label style="font-size:11px;font-weight:500;color:#6b7280;display:block;margin-bottom:4px;">Produto *</label>
+              <select id="cf-produto" style="width:100%;font-size:13px;font-family:Poppins,sans-serif;padding:9px 12px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;box-sizing:border-box;background:#fff;">
                 <option value="">Selecione...</option>
                 <option>Obrigações Plus</option>
                 <option>Gestão Financeira</option>
@@ -367,17 +372,23 @@
                 <option>Todos os produtos</option>
               </select>
             </div>
-          </div>
-          <div class="form-row">
-            <div><label>Desconto / Oferta</label><input type="text" id="cf-desconto" placeholder="Ex: 30% OFF nos 3 primeiros meses"/></div>
-            <div><label>Válida até *</label><input type="date" id="cf-validade"/></div>
-          </div>
-          <div class="form-row single">
-            <div><label>Links das peças (um por linha)</label>
-              <textarea id="cf-pecas" placeholder="https://drive.google.com/...&#10;https://canva.com/...&#10;https://..." style="min-height:80px;"></textarea>
+            <div>
+              <label style="font-size:11px;font-weight:500;color:#6b7280;display:block;margin-bottom:4px;">Válida até *</label>
+              <input type="date" id="cf-validade"
+                style="width:100%;font-size:13px;font-family:Poppins,sans-serif;padding:9px 12px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;box-sizing:border-box;" />
+            </div>
+            <div style="grid-column:1/-1;">
+              <label style="font-size:11px;font-weight:500;color:#6b7280;display:block;margin-bottom:4px;">Desconto / Oferta</label>
+              <input type="text" id="cf-desconto" placeholder="Ex: 30% OFF nos 3 primeiros meses"
+                style="width:100%;font-size:13px;font-family:Poppins,sans-serif;padding:9px 12px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;box-sizing:border-box;" />
+            </div>
+            <div style="grid-column:1/-1;">
+              <label style="font-size:11px;font-weight:500;color:#6b7280;display:block;margin-bottom:4px;">Links das peças <span style="color:#9ca3af;">(um por linha)</span></label>
+              <textarea id="cf-pecas" placeholder="https://drive.google.com/...&#10;https://canva.com/..."
+                style="width:100%;font-size:13px;font-family:Poppins,sans-serif;padding:9px 12px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;box-sizing:border-box;resize:vertical;min-height:80px;"></textarea>
             </div>
           </div>
-          <div class="form-actions">
+          <div style="display:flex;gap:8px;">
             <button class="btn-solid" onclick="saveCampanha()">Salvar campanha</button>
             <button class="btn-cancel" onclick="closeCampForm()">Cancelar</button>
           </div>
