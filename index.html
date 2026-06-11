@@ -1106,6 +1106,7 @@
       document.getElementById('camp-lock-btn').style.display = 'none';
       document.getElementById('camp-unlock-btn').style.display = 'inline-flex';
       document.getElementById('camp-relock-btn').style.display = 'inline-flex';
+      renderCampanhas();
     } else {
       document.getElementById('camp-pin-error').style.display = 'block';
       document.getElementById('camp-pin-input').value = '';
@@ -1113,6 +1114,7 @@
   }
   function lockCamp() {
     campUnlocked = false;
+    renderCampanhas();
     document.getElementById('camp-lock-btn').style.display = 'inline-flex';
     document.getElementById('camp-unlock-btn').style.display = 'none';
     document.getElementById('camp-relock-btn').style.display = 'none';
