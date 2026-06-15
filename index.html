@@ -879,11 +879,19 @@
       document.getElementById('lock-btn').style.display = 'none';
       document.getElementById('unlock-btn').style.display = 'inline-flex';
       document.getElementById('relock-btn').style.display = 'inline-flex';
-      document.getElementById('cal-sub-text').textContent = 'Modo edição ativo · clique no card para editar';
-      if (pendingEditId) {
+      document.getElementById('cal-sub-text').textContent = 'Organizado por mês · clique para editar';
+      if (pendingDeleteId) {
+        var did = pendingDeleteId; pendingDeleteId = null;
+        deleteLaunch(did); return;
+      } else if (pendingEditId) {
         editingLaunchId = pendingEditId;
         pendingEditId = null;
+      } else if (pendingAction === 'add') {
+        pendingAction = null;
+        toggleForm();
+        return;
       }
+      pendingAction = null;
       renderLaunches();
     } else {
       document.getElementById('pin-error').style.display = 'block';
@@ -893,13 +901,18 @@
   }
   function lockCalendar() {
     calUnlocked = false;
-    document.getElementById('lock-btn').style.display = 'inline-flex';
-    document.getElementById('unlock-btn').style.display = 'none';
-    document.getElementById('relock-btn').style.display = 'none';
-    document.getElementById('add-form').classList.remove('open');
-    document.getElementById('cal-sub-text').textContent = 'Organizado por mês, com alertas automáticos 7 dias antes';
+    editingLaunchId = null;
     renderLaunches();
   }
+
+  
+  function addLaunchWithPin() {
+    if (calUnlocked) { toggleForm(); return; }
+    pendingAction = 'add';
+    openPinGate();
+  }
+  var pendingAction = null;
+
   function toggleForm() {
     if (!calUnlocked) { openPinGate(); return; }
     document.getElementById('add-form').classList.toggle('open');
@@ -942,6 +955,13 @@
     document.getElementById('f-status').value = 'planejado';
     toggleForm();
   }
+
+  function deleteLaunchWithPin(id) {
+    if (calUnlocked) { deleteLaunch(id); return; }
+    pendingDeleteId = id;
+    openPinGate();
+  }
+  var pendingDeleteId = null;
 
   function deleteLaunch(id) {
     if (launchesRef) launchesRef.child(id).remove(); else { launches = launches.filter(l=>l.id!==id); renderLaunches(); }
@@ -1100,11 +1120,9 @@
     var mon  = d.toLocaleString("pt-BR",{month:"short"}).replace(".","").toUpperCase();
     var full = d.toLocaleDateString("pt-BR",{weekday:"long",day:"2-digit",month:"long"});
     full = full.charAt(0).toUpperCase()+full.slice(1);
-    var cursor = calUnlocked ? "pointer" : "default";
+    var cursor = "pointer";
     var onclick = calUnlocked ? " onclick=\"startLaunchEdit('"+l.id+"')\"" : "";
-    var deleteBtn = calUnlocked
-      ? "<button onclick=\"event.stopPropagation();deleteLaunch('"+l.id+"')\" style=\"position:absolute;top:10px;right:10px;background:#FEE2E2;border:none;cursor:pointer;color:#DC2626;border-radius:6px;padding:4px 8px;font-size:11px;font-family:Poppins,sans-serif;\">🗑 Remover</button>"
-      : "";
+    var deleteBtn = "<button onclick=\"event.stopPropagation();deleteLaunchWithPin('" +l.id+ "')\" style=\"position:absolute;top:10px;right:10px;background:#FEE2E2;border:none;cursor:pointer;color:#DC2626;border-radius:6px;padding:4px 8px;font-size:11px;font-family:Poppins,sans-serif;\">🗑</button>";
     return "<div"+onclick+" style=\"position:relative;background:#fff;border-radius:16px;overflow:hidden;cursor:"+cursor+";box-shadow:0 1px 4px rgba(0,0,0,0.07);border:1px solid #eef0f3;transition:all 0.15s;\" onmouseover=\"this.style.boxShadow='0 6px 20px rgba(0,114,206,0.12)';this.style.borderColor='#0072CE40'\" onmouseout=\"this.style.boxShadow='0 1px 4px rgba(0,0,0,0.07)';this.style.borderColor='#eef0f3'\">"
       + deleteBtn
       + "<div style=\"display:flex;align-items:stretch;\">"
@@ -1122,7 +1140,7 @@
                 + "<span style=\"font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;background:"+s.bg+";color:"+s.co+";\">"+(l.status||"")+"</span>"
                 + "<span style=\"font-size:11px;color:#9ca3af;\">"+full+"</span>"
                 + (l.link ? "<a href=\""+l.link+"\" target=\"_blank\" onclick=\"event.stopPropagation()\" style=\"font-size:11px;color:#0072CE;text-decoration:none;\">📎 Ver doc</a>" : "")
-                + (calUnlocked ? "<span style=\"font-size:11px;color:#0072CE;font-weight:500;\">✏️ clique para editar</span>" : "")
+                
               + "</div>"
             + "</div>"
           + "</div>"
