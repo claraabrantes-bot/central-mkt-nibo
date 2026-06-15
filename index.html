@@ -1129,7 +1129,7 @@
     full = full.charAt(0).toUpperCase()+full.slice(1);
     var cursor = "pointer";
     var onclick = calUnlocked ? " onclick=\"startLaunchEdit('"+l.id+"')\"" : "";
-    var deleteBtn = "<button onclick=\"event.stopPropagation();deleteLaunchWithPin('" +l.id+ "')\" style=\"position:absolute;top:10px;right:10px;background:#FEE2E2;border:none;cursor:pointer;color:#DC2626;border-radius:6px;padding:4px 8px;font-size:11px;font-family:Poppins,sans-serif;\">🗑</button>";
+    var deleteBtn = "<button onclick=\"event.stopPropagation();deleteLaunchWithPin('"+l.id+"')\" style=\"position:absolute;top:12px;right:12px;background:#FEE2E2;border:none;cursor:pointer;color:#DC2626;border-radius:6px;padding:5px 12px;font-size:11px;font-weight:600;font-family:Poppins,sans-serif;\">🗑 Remover</button>";
     return "<div"+onclick+" style=\"position:relative;background:#fff;border-radius:16px;overflow:hidden;cursor:"+cursor+";box-shadow:0 1px 4px rgba(0,0,0,0.07);border:1px solid #eef0f3;transition:all 0.15s;opacity:"+(isPast?"0.6":"1")+";\" onmouseover=\"this.style.boxShadow='0 6px 20px rgba(0,114,206,0.12)';this.style.borderColor='#0072CE40'\" onmouseout=\"this.style.boxShadow='0 1px 4px rgba(0,0,0,0.07)';this.style.borderColor='#eef0f3'\">"
       + deleteBtn
       + "<div style=\"display:flex;align-items:stretch;\">"
@@ -1509,4 +1509,4 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
   <script>initFirebase();</script>
 </body>
-</html>
+    var deleteBtn = "<button onclick=\"event.stopPropagation();deleteLaunchWithPin('"+l.id+"')\" style=\"position:absolute;top:12px;right:12px;background:#FEE2E2;border:none;cursor:pointer;color:#DC2626;border-radius:6px;padding:5px 12px;font-size:11px;font-weight:600;font-family:Poppins,sans-serif;\">🗑 Remover</button>";
