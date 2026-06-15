@@ -996,7 +996,7 @@
 
   function setActiveMonth(m) {
     activeMonth = m;
-    activeYear = parseInt(m.slice(0,4));
+    if (m) activeYear = parseInt(m.slice(0,4));
     // close tabs after selecting
     const wrap = document.getElementById('month-tabs-wrap');
     if (wrap) wrap.style.display = 'none';
@@ -1008,26 +1008,25 @@
   const PT_MONTHS = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
 
   function renderMonthTabs(months) {
-    setTimeout(updateActiveMonthLabel, 50);
-    const tabs = document.getElementById('month-tabs');
+    var tabs = document.getElementById("month-tabs");
     if (!tabs) return;
-    const now = new Date();
-    const todayKey = now.toISOString().slice(0,7);
+    var todayKey = new Date().toISOString().slice(0,7);
 
-    tabs.innerHTML = PT_MONTHS.map((m, i) => {
-      const mk = `2026-${String(i+1).padStart(2,'0')}`;
-      const hasItems = !!months[mk];
-      const isActive = mk === activeMonth;
-      const isToday  = mk === todayKey;
-      const label    = m.charAt(0).toUpperCase() + m.slice(1);
-      const dot      = hasItems ? `<span style="display:inline-block;width:5px;height:5px;border-radius:50%;background:${isActive?'#fff':'#0072CE'};margin-left:4px;vertical-align:middle;"></span>` : '';
-      return `<button class="month-tab${isActive?' active':''}${isToday&&!isActive?' today':''}"
-        onclick="setActiveMonth('${mk}')"
-        style="${!hasItems?'opacity:0.4;':''}"
-      >${label}${dot}</button>`;
-    }).join('');
+    var html = '<button class="month-tab'+(activeMonth===null?' active':'')+'" onclick="setActiveMonth(null)" style="font-size:12px;">Todos</button>';
+
+    var PT = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
+    PT.forEach(function(m, i) {
+      var mk = "2026-"+(i+1<10?"0":"")+(i+1);
+      var hasItems = !!months[mk];
+      var isActive = mk === activeMonth;
+      var isToday  = mk === todayKey;
+      var dot = hasItems ? '<span style="display:inline-block;width:5px;height:5px;border-radius:50%;background:'+(isActive?"#fff":"#0072CE")+';margin-left:4px;vertical-align:middle;"></span>' : '';
+      html += '<button class="month-tab'+(isActive?' active':'')+(isToday&&!isActive?' today':'')+'" onclick="setActiveMonth(''+mk+'')" style="'+(hasItems?'':'opacity:0.4;')+'">'+ m + dot +'</button>';
+    });
+    tabs.innerHTML = html;
   }
 
+  
   function buildSaveBtn(id) {
     return '<button class="btn-solid" data-id="'+id+'" onclick="saveLaunchEdit(this.dataset.id)">Salvar</button>';
   }
@@ -1058,12 +1057,15 @@
     setTimeout(updateActiveMonthLabel, 50);
     var SC = {planejado:["#EBF4FF","#185FA5"],"em breve":["#FEF3C7","#92400E"],entregue:["#EAF3DE","#3B6D11"]};
     var allMonths = Object.keys(months).sort();
+    if (activeMonth !== null) {
+      allMonths = allMonths.filter(function(mk){ return mk === activeMonth; });
+    }
     var out = "";
     allMonths.forEach(function(mk) {
       var d = new Date(mk+"-01T12:00:00");
       var lbl = d.toLocaleString("pt-BR",{month:"long",year:"numeric"});
       lbl = lbl.charAt(0).toUpperCase()+lbl.slice(1);
-      var col = mk === activeMonth ? "#0072CE" : "#9ca3af";
+      var col = (activeMonth === null || mk === activeMonth) ? "#0072CE" : "#9ca3af";
       out += "<div style=\"margin-bottom:24px;\">";
       out += "<div style=\"font-size:11px;font-weight:600;color:"+col+";text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;padding-bottom:6px;border-bottom:1.5px solid "+(mk===activeMonth?"#0072CE":"#e2e4e9")+";\">"+lbl+"</div>";
       out += "<div style=\"display:grid;grid-template-columns:1fr;gap:12px;\">";
@@ -1109,11 +1111,16 @@
   }
 
   function buildLaunchCard(l) {
+    var today = new Date(); today.setHours(0,0,0,0);
+    var lDate = new Date(l.date+"T12:00:00"); lDate.setHours(0,0,0,0);
+    var isPast = lDate < today && l.status !== "entregue";
     var SM = {
       planejado:  {icon:"📋", bg:"#EBF4FF", co:"#1D6FA4", bar:"#0072CE"},
       "em breve": {icon:"⏳", bg:"#FEF9EC", co:"#92400E", bar:"#D97706"},
-      entregue:   {icon:"✅", bg:"#ECFDF5", co:"#065F46", bar:"#059669"}
+      entregue:   {icon:"✅", bg:"#ECFDF5", co:"#065F46", bar:"#059669"},
+      passado:    {icon:"⬜", bg:"#F3F4F6", co:"#9ca3af", bar:"#d1d5db"}
     };
+    if (isPast) l = Object.assign({}, l, {status:"passado"});
     var s = SM[l.status] || {icon:"📋", bg:"#f4f5f7", co:"#374151", bar:"#9ca3af"};
     var d = new Date(l.date+"T12:00:00");
     var day  = d.getDate();
@@ -1123,7 +1130,7 @@
     var cursor = "pointer";
     var onclick = calUnlocked ? " onclick=\"startLaunchEdit('"+l.id+"')\"" : "";
     var deleteBtn = "<button onclick=\"event.stopPropagation();deleteLaunchWithPin('" +l.id+ "')\" style=\"position:absolute;top:10px;right:10px;background:#FEE2E2;border:none;cursor:pointer;color:#DC2626;border-radius:6px;padding:4px 8px;font-size:11px;font-family:Poppins,sans-serif;\">🗑</button>";
-    return "<div"+onclick+" style=\"position:relative;background:#fff;border-radius:16px;overflow:hidden;cursor:"+cursor+";box-shadow:0 1px 4px rgba(0,0,0,0.07);border:1px solid #eef0f3;transition:all 0.15s;\" onmouseover=\"this.style.boxShadow='0 6px 20px rgba(0,114,206,0.12)';this.style.borderColor='#0072CE40'\" onmouseout=\"this.style.boxShadow='0 1px 4px rgba(0,0,0,0.07)';this.style.borderColor='#eef0f3'\">"
+    return "<div"+onclick+" style=\"position:relative;background:#fff;border-radius:16px;overflow:hidden;cursor:"+cursor+";box-shadow:0 1px 4px rgba(0,0,0,0.07);border:1px solid #eef0f3;transition:all 0.15s;opacity:"+(isPast?"0.6":"1")+";\" onmouseover=\"this.style.boxShadow='0 6px 20px rgba(0,114,206,0.12)';this.style.borderColor='#0072CE40'\" onmouseout=\"this.style.boxShadow='0 1px 4px rgba(0,0,0,0.07)';this.style.borderColor='#eef0f3'\">"
       + deleteBtn
       + "<div style=\"display:flex;align-items:stretch;\">"
         + "<div style=\"width:5px;background:"+s.bar+";flex-shrink:0;border-radius:0;\"></div>"
