@@ -412,7 +412,20 @@
         </div>
 
         <!-- LISTA de campanhas -->
-        <!-- UPLOAD PIN GATE -->
+        <!-- CONFIRM DELETE MODAL -->
+  <div id="confirm-delete-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:999;align-items:center;justify-content:center;">
+    <div style="background:#fff;border-radius:16px;padding:28px 24px;max-width:320px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+      <div style="font-size:32px;margin-bottom:12px;">🗑</div>
+      <div style="font-size:15px;font-weight:700;color:#1a1a2e;margin-bottom:8px;">Remover lançamento?</div>
+      <div style="font-size:13px;color:#6b7280;margin-bottom:20px;" id="confirm-delete-name">Esta ação não pode ser desfeita.</div>
+      <div style="display:flex;gap:10px;">
+        <button onclick="closeConfirmDelete()" style="flex:1;padding:10px;border-radius:8px;border:1px solid #e2e4e9;background:#fff;font-size:13px;font-weight:500;cursor:pointer;font-family:Poppins,sans-serif;color:#374151;">Cancelar</button>
+        <button onclick="confirmDelete()" style="flex:1;padding:10px;border-radius:8px;border:none;background:#DC2626;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:Poppins,sans-serif;">Sim, remover</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- UPLOAD PIN GATE -->
         <div id="upload-pin-gate" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:999;align-items:center;justify-content:center;">
           <div style="background:#fff;border-radius:16px;padding:28px;max-width:300px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
             <div style="font-size:20px;margin-bottom:10px;">📁</div>
@@ -882,7 +895,7 @@
       document.getElementById('cal-sub-text').textContent = 'Organizado por mês · clique para editar';
       if (pendingDeleteId) {
         var did = pendingDeleteId; pendingDeleteId = null;
-        deleteLaunch(did); return;
+        showConfirmDelete(did); return;
       } else if (pendingEditId) {
         editingLaunchId = pendingEditId;
         pendingEditId = null;
@@ -957,11 +970,30 @@
   }
 
   function deleteLaunchWithPin(id) {
-    if (calUnlocked) { deleteLaunch(id); return; }
+    if (calUnlocked) { showConfirmDelete(id); return; }
     pendingDeleteId = id;
     openPinGate();
   }
   var pendingDeleteId = null;
+  var confirmDeleteId = null;
+
+  function showConfirmDelete(id) {
+    confirmDeleteId = id;
+    var launch = launches.find(function(l){ return l.id === id; });
+    var nameEl = document.getElementById("confirm-delete-name");
+    if (nameEl && launch) nameEl.textContent = """ + launch.name + "" será removido permanentemente.";
+    var modal = document.getElementById("confirm-delete-modal");
+    if (modal) modal.style.display = "flex";
+  }
+  function closeConfirmDelete() {
+    confirmDeleteId = null;
+    var modal = document.getElementById("confirm-delete-modal");
+    if (modal) modal.style.display = "none";
+  }
+  function confirmDelete() {
+    closeConfirmDelete();
+    if (confirmDeleteId) { deleteLaunch(confirmDeleteId); confirmDeleteId = null; }
+  }
 
   function deleteLaunch(id) {
     if (launchesRef) launchesRef.child(id).remove(); else { launches = launches.filter(l=>l.id!==id); renderLaunches(); }
