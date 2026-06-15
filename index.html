@@ -365,39 +365,43 @@
         <!-- FORM nova campanha -->
         <div id="camp-form" style="display:none;background:#fff;border:0.5px solid #0072CE;border-radius:14px;padding:22px;margin-bottom:16px;">
           <div style="font-size:14px;font-weight:600;color:#1a1a2e;margin-bottom:18px;">Nova campanha</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
-            <div style="grid-column:1/-1;">
-              <label style="font-size:11px;font-weight:500;color:#6b7280;display:block;margin-bottom:4px;">Nome da campanha *</label>
-              <input type="text" id="cf-nome" placeholder="Ex: 30% OFF Ecossistema"
-                style="width:100%;font-size:13px;font-family:Poppins,sans-serif;padding:9px 12px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;box-sizing:border-box;" />
+          <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <div>
+                <label style="font-size:11px;font-weight:500;color:#6b7280;display:block;margin-bottom:4px;">Nome da campanha *</label>
+                <input type="text" id="cf-nome" placeholder="Ex: Campanha da Copa"
+                  style="width:100%;font-size:13px;font-family:Poppins,sans-serif;padding:9px 12px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;box-sizing:border-box;" />
+              </div>
+              <div>
+                <label style="font-size:11px;font-weight:500;color:#6b7280;display:block;margin-bottom:4px;">Válida até *</label>
+                <input type="date" id="cf-validade"
+                  style="width:100%;font-size:13px;font-family:Poppins,sans-serif;padding:9px 12px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;box-sizing:border-box;" />
+              </div>
             </div>
-            <div>
-              <label style="font-size:11px;font-weight:500;color:#6b7280;display:block;margin-bottom:4px;">Produto *</label>
-              <select id="cf-produto" style="width:100%;font-size:13px;font-family:Poppins,sans-serif;padding:9px 12px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;box-sizing:border-box;background:#fff;">
-                <option value="">Selecione...</option>
-                <option>Obrigações Plus</option>
-                <option>Gestão Financeira</option>
-                <option>BPO</option>
-                <option>Radar e-CAC</option>
-                <option>Nibo Emissor</option>
-                <option>Conciliador Open Finance</option>
-                <option>Meu App</option>
-                <option>Todos os produtos</option>
-              </select>
-            </div>
-            <div>
-              <label style="font-size:11px;font-weight:500;color:#6b7280;display:block;margin-bottom:4px;">Válida até *</label>
-              <input type="date" id="cf-validade"
-                style="width:100%;font-size:13px;font-family:Poppins,sans-serif;padding:9px 12px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;box-sizing:border-box;" />
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <div>
+                <label style="font-size:11px;font-weight:500;color:#6b7280;display:block;margin-bottom:4px;">Produto *</label>
+                <select id="cf-produto" style="width:100%;font-size:13px;font-family:Poppins,sans-serif;padding:9px 12px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;box-sizing:border-box;background:#fff;">
+                  <option value="">Selecione...</option>
+                  <option>Obrigações Plus</option>
+                  <option>Gestão Financeira</option>
+                  <option>BPO</option>
+                  <option>Radar e-CAC</option>
+                  <option>Nibo Emissor</option>
+                  <option>Conciliador Open Finance</option>
+                  <option>Meu App</option>
+                  <option>Todos os produtos</option>
+                </select>
+              </div>
+              <div>
+                <label style="font-size:11px;font-weight:500;color:#6b7280;display:block;margin-bottom:4px;">Tema da campanha</label>
+                <input type="text" id="cf-tema" placeholder="Ex: Mês do Contador, Black Friday..."
+                  style="width:100%;font-size:13px;font-family:Poppins,sans-serif;padding:9px 12px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;box-sizing:border-box;" />
+              </div>
             </div>
             <div>
               <label style="font-size:11px;font-weight:500;color:#6b7280;display:block;margin-bottom:4px;">Desconto / Oferta</label>
               <input type="text" id="cf-desconto" placeholder="Ex: 30% OFF nos 3 primeiros meses"
-                style="width:100%;font-size:13px;font-family:Poppins,sans-serif;padding:9px 12px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;box-sizing:border-box;" />
-            </div>
-            <div>
-              <label style="font-size:11px;font-weight:500;color:#6b7280;display:block;margin-bottom:4px;">Tema da campanha</label>
-              <input type="text" id="cf-tema" placeholder="Ex: Mês do Contador, Black Friday..."
                 style="width:100%;font-size:13px;font-family:Poppins,sans-serif;padding:9px 12px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;box-sizing:border-box;" />
             </div>
           </div>
