@@ -1011,17 +1011,17 @@
     var tabs = document.getElementById("month-tabs");
     if (!tabs) return;
     var todayKey = new Date().toISOString().slice(0,7);
-
-    var html = '<button class="month-tab'+(activeMonth===null?' active':'')+'" onclick="setActiveMonth(null)" style="font-size:12px;">Todos</button>';
-
     var PT = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
+    var html = "<button class=\"month-tab" + (activeMonth===null ? " active" : "") + "\" onclick=\"setActiveMonth(null)\">Todos</button>";
     PT.forEach(function(m, i) {
-      var mk = "2026-"+(i+1<10?"0":"")+(i+1);
+      var mk = "2026-" + (i+1 < 10 ? "0" : "") + (i+1);
       var hasItems = !!months[mk];
       var isActive = mk === activeMonth;
       var isToday  = mk === todayKey;
-      var dot = hasItems ? '<span style="display:inline-block;width:5px;height:5px;border-radius:50%;background:'+(isActive?"#fff":"#0072CE")+';margin-left:4px;vertical-align:middle;"></span>' : '';
-      html += '<button class="month-tab'+(isActive?' active':'')+(isToday&&!isActive?' today':'')+'" onclick="setActiveMonth(''+mk+'')" style="'+(hasItems?'':'opacity:0.4;')+'">'+ m + dot +'</button>';
+      var dot = hasItems ? "<span style=\"display:inline-block;width:5px;height:5px;border-radius:50%;background:" + (isActive ? "#fff" : "#0072CE") + ";margin-left:4px;vertical-align:middle;\"></span>" : "";
+      var cls = "month-tab" + (isActive ? " active" : "") + (isToday && !isActive ? " today" : "");
+      var sty = hasItems ? "" : "opacity:0.4;";
+      html += "<button class=\"" + cls + "\" onclick=\"setActiveMonth('" + mk + "')\" style=\"" + sty + "\">" + m + dot + "</button>";
     });
     tabs.innerHTML = html;
   }
