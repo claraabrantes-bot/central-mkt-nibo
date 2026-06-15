@@ -1304,7 +1304,7 @@
         <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;background:#f8f9fa;border-radius:6px;">
           <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#0072CE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2"/></svg>
           <a href="${p.url}" target="_blank" style="font-size:12px;color:#0072CE;text-decoration:none;flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">${p.nome}</a>
-          ${campUnlocked ? '<button onclick="deletePeca(\'' + c.id + '\',' + i + ')" style="background:none;border:none;cursor:pointer;color:#9ca3af;font-size:11px;padding:0 2px;flex-shrink:0;" title="Remover">✕</button>' : ''}
+          ${buildPecaDeleteBtn(c.id, i)}
         </div>`).join('') : '<div style="font-size:12px;color:#9ca3af;">Nenhuma peça enviada ainda.</div>';
 
       return `<div style="background:#fff;border:0.5px solid ${expired?'#FCA5A5':'#e2e4e9'};border-radius:14px;overflow:hidden;opacity:${expired?'0.75':'1'};transition:box-shadow 0.15s;" onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,0.08)'" onmouseout="this.style.boxShadow='none'">
@@ -1351,7 +1351,7 @@
           </div>
 
           <!-- Delete button -->
-          ${campUnlocked ? '<div style="margin-top:10px;text-align:right;"><button onclick="deleteCampanha(\'' + c.id + '\')" style="background:#FEE2E2;border:none;cursor:pointer;color:#DC2626;font-size:11px;font-weight:500;font-family:Poppins,sans-serif;padding:5px 10px;border-radius:6px;">🗑 Remover campanha</button></div>' : ''}
+          ${buildCampDeleteBtn(c.id)}
         </div>
       </div>`;
     }).join('');
