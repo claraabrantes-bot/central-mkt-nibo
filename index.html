@@ -981,7 +981,7 @@
     confirmDeleteId = id;
     var launch = launches.find(function(l){ return l.id === id; });
     var nameEl = document.getElementById("confirm-delete-name");
-    if (nameEl && launch) nameEl.textContent = """ + launch.name + "" será removido permanentemente.";
+    if (nameEl && launch) nameEl.textContent = launch.name + " será removido permanentemente.";
     var modal = document.getElementById("confirm-delete-modal");
     if (modal) modal.style.display = "flex";
   }
