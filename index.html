@@ -824,7 +824,17 @@
 
   let editingLaunchId = null;
 
-  function startLaunchEdit(id) { editingLaunchId = id; renderLaunches(); }
+  function startLaunchEdit(id) {
+    if (!calUnlocked) {
+      // ask pin inline
+      pendingEditId = id;
+      openPinGate();
+      return;
+    }
+    editingLaunchId = id;
+    renderLaunches();
+  }
+  var pendingEditId = null;
   function cancelLaunchEdit() { editingLaunchId = null; renderLaunches(); }
   function saveLaunchEdit(id) {
     const name   = (document.getElementById('edit-name')||{}).value?.trim();
@@ -869,7 +879,11 @@
       document.getElementById('lock-btn').style.display = 'none';
       document.getElementById('unlock-btn').style.display = 'inline-flex';
       document.getElementById('relock-btn').style.display = 'inline-flex';
-      document.getElementById('cal-sub-text').textContent = 'Modo edição ativo · clique em Bloquear quando terminar';
+      document.getElementById('cal-sub-text').textContent = 'Modo edição ativo · clique no card para editar';
+      if (pendingEditId) {
+        editingLaunchId = pendingEditId;
+        pendingEditId = null;
+      }
       renderLaunches();
     } else {
       document.getElementById('pin-error').style.display = 'block';
@@ -1032,7 +1046,7 @@
       var col = mk === activeMonth ? "#0072CE" : "#9ca3af";
       out += "<div style=\"margin-bottom:24px;\">";
       out += "<div style=\"font-size:11px;font-weight:600;color:"+col+";text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;padding-bottom:6px;border-bottom:1.5px solid "+(mk===activeMonth?"#0072CE":"#e2e4e9")+";\">"+lbl+"</div>";
-      out += "<div style=\"display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;\">";
+      out += "<div style=\"display:grid;grid-template-columns:1fr;gap:12px;\">";
       months[mk].items.forEach(function(l) {
         if (editingLaunchId === l.id) {
           out += buildEditForm(l);
@@ -1075,27 +1089,48 @@
   }
 
   function buildLaunchCard(l) {
-    var SC = {planejado:["#EBF4FF","#185FA5"],"em breve":["#FEF3C7","#92400E"],entregue:["#EAF3DE","#3B6D11"]};
-    var c = SC[l.status] || ["#f4f5f7","#6b7280"];
-    var ds = new Date(l.date+"T12:00:00").toLocaleDateString("pt-BR",{day:"2-digit",month:"short",year:"numeric"});
-    return "<div style=\"background:#fff;border:1px solid #e2e4e9;border-radius:14px;overflow:hidden;\">"
-      + "<div style=\"height:5px;background:#0072CE;\"></div>"
-      + "<div style=\"padding:16px 18px;\">"
-        + "<div style=\"display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px;\">"
-          + "<div style=\"font-size:15px;font-weight:700;color:#1a1a2e;\">"+l.name+"</div>"
-          + "<span style=\"font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;background:"+c[0]+";color:"+c[1]+";\">"+(l.status||"")+"</span>"
-        + "</div>"
-        + (l.desc ? "<div style=\"font-size:12.5px;color:#6b7280;line-height:1.6;margin-bottom:8px;\">"+l.desc+"</div>" : "")
-        + "<div style=\"display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;\">"
-          + "<div style=\"font-size:12px;color:#9ca3af;\">📅 "+ds+"</div>"
-          + "<div style=\"display:flex;align-items:center;gap:6px;\">"
-            + (l.link ? "<a href=\""+l.link+"\" target=\"_blank\" style=\"font-size:12px;font-weight:500;color:#0072CE;background:#EBF4FF;padding:5px 10px;border-radius:6px;text-decoration:none;\">Ver doc</a>" : "")
-            + launchEditBtns(l.id)
+    var SM = {
+      planejado:  {icon:"📋", bg:"#EBF4FF", co:"#1D6FA4", bar:"#0072CE"},
+      "em breve": {icon:"⏳", bg:"#FEF9EC", co:"#92400E", bar:"#D97706"},
+      entregue:   {icon:"✅", bg:"#ECFDF5", co:"#065F46", bar:"#059669"}
+    };
+    var s = SM[l.status] || {icon:"📋", bg:"#f4f5f7", co:"#374151", bar:"#9ca3af"};
+    var d = new Date(l.date+"T12:00:00");
+    var day  = d.getDate();
+    var mon  = d.toLocaleString("pt-BR",{month:"short"}).replace(".","").toUpperCase();
+    var full = d.toLocaleDateString("pt-BR",{weekday:"long",day:"2-digit",month:"long"});
+    full = full.charAt(0).toUpperCase()+full.slice(1);
+    var cursor = calUnlocked ? "pointer" : "default";
+    var onclick = calUnlocked ? " onclick=\"startLaunchEdit('"+l.id+"')\"" : "";
+    var deleteBtn = calUnlocked
+      ? "<button onclick=\"event.stopPropagation();deleteLaunch('"+l.id+"')\" style=\"position:absolute;top:10px;right:10px;background:#FEE2E2;border:none;cursor:pointer;color:#DC2626;border-radius:6px;padding:4px 8px;font-size:11px;font-family:Poppins,sans-serif;\">🗑 Remover</button>"
+      : "";
+    return "<div"+onclick+" style=\"position:relative;background:#fff;border-radius:16px;overflow:hidden;cursor:"+cursor+";box-shadow:0 1px 4px rgba(0,0,0,0.07);border:1px solid #eef0f3;transition:all 0.15s;\" onmouseover=\"this.style.boxShadow='0 6px 20px rgba(0,114,206,0.12)';this.style.borderColor='#0072CE40'\" onmouseout=\"this.style.boxShadow='0 1px 4px rgba(0,0,0,0.07)';this.style.borderColor='#eef0f3'\">"
+      + deleteBtn
+      + "<div style=\"display:flex;align-items:stretch;\">"
+        + "<div style=\"width:5px;background:"+s.bar+";flex-shrink:0;border-radius:0;\"></div>"
+        + "<div style=\"padding:16px 18px;flex:1;\">"
+          + "<div style=\"display:flex;align-items:flex-start;gap:14px;\">"
+            + "<div style=\"text-align:center;background:"+s.bg+";border-radius:10px;padding:8px 12px;flex-shrink:0;min-width:52px;\">"
+              + "<div style=\"font-size:22px;font-weight:800;color:"+s.co+";line-height:1;\">"+day+"</div>"
+              + "<div style=\"font-size:10px;font-weight:700;color:"+s.co+";text-transform:uppercase;letter-spacing:0.5px;margin-top:2px;\">"+mon+"</div>"
+            + "</div>"
+            + "<div style=\"flex:1;min-width:0;\">"
+              + "<div style=\"font-size:14px;font-weight:700;color:#1a1a2e;line-height:1.3;margin-bottom:4px;\">"+l.name+"</div>"
+              + (l.desc ? "<div style=\"font-size:12px;color:#6b7280;line-height:1.5;margin-bottom:6px;\">"+l.desc+"</div>" : "")
+              + "<div style=\"display:flex;align-items:center;gap:6px;flex-wrap:wrap;\">"
+                + "<span style=\"font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;background:"+s.bg+";color:"+s.co+";\">"+(l.status||"")+"</span>"
+                + "<span style=\"font-size:11px;color:#9ca3af;\">"+full+"</span>"
+                + (l.link ? "<a href=\""+l.link+"\" target=\"_blank\" onclick=\"event.stopPropagation()\" style=\"font-size:11px;color:#0072CE;text-decoration:none;\">📎 Ver doc</a>" : "")
+                + (calUnlocked ? "<span style=\"font-size:11px;color:#0072CE;font-weight:500;\">✏️ clique para editar</span>" : "")
+              + "</div>"
+            + "</div>"
           + "</div>"
         + "</div>"
       + "</div>"
     + "</div>";
   }
+
 
   function openCampPinGate() {
     const g = document.getElementById('camp-pin-gate');
