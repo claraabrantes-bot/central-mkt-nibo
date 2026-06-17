@@ -442,6 +442,54 @@
           </div>
         </div>
 
+  <!-- EDIT CAMPANHA MODAL -->
+  <div id="edit-camp-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:999;align-items:center;justify-content:center;">
+    <div style="background:#fff;border-radius:16px;padding:28px 24px;max-width:480px;width:92%;box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+      <div style="font-size:15px;font-weight:700;color:#1a1a2e;margin-bottom:18px;">✏️ Editar campanha</div>
+      <input type="hidden" id="ec-id" />
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:18px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div>
+            <label style="font-size:11px;font-weight:500;color:#6b7280;display:block;margin-bottom:4px;">Nome *</label>
+            <input type="text" id="ec-nome" style="width:100%;font-size:13px;font-family:Poppins,sans-serif;padding:9px 12px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;box-sizing:border-box;" />
+          </div>
+          <div>
+            <label style="font-size:11px;font-weight:500;color:#6b7280;display:block;margin-bottom:4px;">Válida até *</label>
+            <input type="date" id="ec-validade" style="width:100%;font-size:13px;font-family:Poppins,sans-serif;padding:9px 12px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;box-sizing:border-box;" />
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div>
+            <label style="font-size:11px;font-weight:500;color:#6b7280;display:block;margin-bottom:4px;">Produto</label>
+            <select id="ec-produto" style="width:100%;font-size:13px;font-family:Poppins,sans-serif;padding:9px 12px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;box-sizing:border-box;background:#fff;">
+              <option value="">Selecione...</option>
+              <option>Obrigações Plus</option>
+              <option>Gestão Financeira</option>
+              <option>BPO</option>
+              <option>Radar e-CAC</option>
+              <option>Nibo Emissor</option>
+              <option>Conciliador Open Finance</option>
+              <option>Meu App</option>
+              <option>Todos os produtos</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:11px;font-weight:500;color:#6b7280;display:block;margin-bottom:4px;">Tema</label>
+            <input type="text" id="ec-tema" placeholder="Ex: Black Friday..." style="width:100%;font-size:13px;font-family:Poppins,sans-serif;padding:9px 12px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;box-sizing:border-box;" />
+          </div>
+        </div>
+        <div>
+          <label style="font-size:11px;font-weight:500;color:#6b7280;display:block;margin-bottom:4px;">Desconto / Oferta</label>
+          <input type="text" id="ec-desconto" placeholder="Ex: 30% OFF nos 3 primeiros meses" style="width:100%;font-size:13px;font-family:Poppins,sans-serif;padding:9px 12px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;box-sizing:border-box;" />
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;">
+        <button onclick="closeEditCampanha()" style="padding:9px 18px;border-radius:8px;border:1px solid #e2e4e9;background:#fff;font-size:13px;font-weight:500;cursor:pointer;font-family:Poppins,sans-serif;color:#374151;">Cancelar</button>
+        <button onclick="saveEditCampanha()" style="padding:9px 18px;border-radius:8px;border:none;background:#0072CE;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:Poppins,sans-serif;">Salvar alterações</button>
+      </div>
+    </div>
+  </div>
+
         <div id="camp-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;"></div>
         <div id="camp-empty" style="display:none;text-align:center;padding:48px 20px;color:#9ca3af;font-size:13px;">
           <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#d1d5db" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin:0 auto 10px;"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 5m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z"/><path d="M9 12l2 2l4 -4"/></svg>
@@ -1244,8 +1292,46 @@
   }
   function deleteCampanha(id) {
     if (!campUnlocked) return;
+    if (!confirm('Remover esta campanha?')) return;
     if (campRef) campRef.child(id).remove();
     else { campanhas = campanhas.filter(c => c.id !== id); renderCampanhas(); }
+  }
+
+  function openEditCampanha(id) {
+    const c = campanhas.find(x => x.id === id);
+    if (!c) return;
+    const modal = document.getElementById('edit-camp-modal');
+    if (!modal) return;
+    document.getElementById('ec-id').value      = id;
+    document.getElementById('ec-nome').value    = c.nome || '';
+    document.getElementById('ec-produto').value = c.produto || '';
+    document.getElementById('ec-desconto').value= c.desconto || '';
+    document.getElementById('ec-validade').value= c.validade || '';
+    document.getElementById('ec-tema').value    = c.tema || '';
+    modal.style.display = 'flex';
+  }
+
+  function closeEditCampanha() {
+    const modal = document.getElementById('edit-camp-modal');
+    if (modal) modal.style.display = 'none';
+  }
+
+  function saveEditCampanha() {
+    const id      = document.getElementById('ec-id').value;
+    const nome    = (document.getElementById('ec-nome').value || '').trim();
+    const produto = document.getElementById('ec-produto').value || '';
+    const desconto= (document.getElementById('ec-desconto').value || '').trim();
+    const validade= document.getElementById('ec-validade').value || '';
+    const tema    = (document.getElementById('ec-tema').value || '').trim();
+    if (!nome || !validade) { alert('Preencha nome e validade.'); return; }
+    const update = { nome, produto, desconto, validade, tema };
+    if (campRef) campRef.child(id).update(update);
+    else {
+      const c = campanhas.find(x => x.id === id);
+      if (c) Object.assign(c, update);
+      renderCampanhas();
+    }
+    closeEditCampanha();
   }
   function togglePecas(id) {
     const el = document.getElementById('pecas-'+id);
@@ -1266,7 +1352,10 @@
 
   function buildCampDeleteBtn(id) {
     if (!campUnlocked) return '';
-    return "<div style=\"border-top:0.5px solid #fee2e2;margin-top:12px;padding-top:10px;text-align:right;\"><button onclick=\"deleteCampanha('" + id + "')\" style=\"background:none;border:none;cursor:pointer;color:#DC2626;font-size:11px;font-weight:500;font-family:Poppins,sans-serif;\">🗑 Remover campanha</button></div>";
+    return "<div style=\"border-top:0.5px solid #f0f0f0;margin-top:12px;padding-top:10px;display:flex;justify-content:space-between;align-items:center;\">"
+      + "<button onclick=\"openEditCampanha('" + id + "')\" style=\"background:none;border:1px solid #0072CE;border-radius:6px;cursor:pointer;color:#0072CE;font-size:11px;font-weight:500;font-family:Poppins,sans-serif;padding:5px 12px;\">✏️ Editar</button>"
+      + "<button onclick=\"deleteCampanha('" + id + "')\" style=\"background:none;border:none;cursor:pointer;color:#DC2626;font-size:11px;font-weight:500;font-family:Poppins,sans-serif;\">🗑 Remover</button>"
+      + "</div>";
   }
 
   function buildPecaDeleteBtn(campId, idx) {
