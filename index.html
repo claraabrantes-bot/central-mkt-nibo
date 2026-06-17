@@ -1218,7 +1218,7 @@
   }
   function openCampForm() {
     const f = document.getElementById('camp-form'); if (f) f.style.display = 'block';
-    ['cf-nome','cf-desconto','cf-validade','cf-pecas','cf-tema'].forEach(id => { const e = document.getElementById(id); if(e) e.value=''; });
+    ['cf-nome','cf-desconto','cf-validade','cf-tema'].forEach(id => { const e = document.getElementById(id); if(e) e.value=''; });
     document.getElementById('cf-produto').value = '';
   }
   function closeCampForm() {
@@ -1229,10 +1229,9 @@
     const produto  = (document.getElementById('cf-produto')||{}).value;
     const desconto = (document.getElementById('cf-desconto')||{}).value?.trim();
     const validade = (document.getElementById('cf-validade')||{}).value;
-    const pecas    = (document.getElementById('cf-pecas')||{}).value?.trim();
     const tema     = (document.getElementById('cf-tema')||{}).value?.trim();
     if (!nome || !validade) { alert('Preencha nome e validade.'); return; }
-    const entry = { nome, produto, desconto, validade, pecas, tema, ativa: true };
+    const entry = { nome: nome||'', produto: produto||'', desconto: desconto||'', validade: validade||'', tema: tema||'', pecas: [], ativa: true };
     if (campRef) campRef.push(entry);
     else { campanhas.push({...entry, id: Date.now().toString()}); renderCampanhas(); }
     // ^ Firebase listener will auto-update UI when campRef fires
