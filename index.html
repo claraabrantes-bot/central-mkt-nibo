@@ -443,7 +443,7 @@
         </div>
 
         <div id="camp-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;"></div>
-        <div id="camp-empty" style="text-align:center;padding:48px 20px;color:#9ca3af;font-size:13px;">
+        <div id="camp-empty" style="display:none;text-align:center;padding:48px 20px;color:#9ca3af;font-size:13px;">
           <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#d1d5db" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin:0 auto 10px;"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 5m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z"/><path d="M9 12l2 2l4 -4"/></svg>
           Nenhuma campanha ativa cadastrada.<br>Clique em "Editar" para adicionar.
         </div>
@@ -814,7 +814,9 @@
       campRef = db.ref('campanhas');
       campRef.on('value', snap => {
         const data = snap.val();
+        console.log('[camp] raw Firebase data:', data);
         campanhas = data ? Object.entries(data).map(([id,v]) => ({...v, id})) : [];
+        console.log('[camp] campanhas array:', campanhas);
         campanhas.sort((a,b) => new Date(a.validade) - new Date(b.validade));
         renderCampanhas();
       });
