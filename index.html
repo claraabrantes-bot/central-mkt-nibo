@@ -537,6 +537,8 @@
             <input type="url" id="post-url-1" placeholder="Link do post 1" style="font-size:12px;font-family:Poppins,sans-serif;padding:8px 10px;border-radius:8px;border:0.5px solid #d1d5db;width:100%;outline:none;" />
             <input type="url" id="post-url-2" placeholder="Link do post 2" style="font-size:12px;font-family:Poppins,sans-serif;padding:8px 10px;border-radius:8px;border:0.5px solid #d1d5db;width:100%;outline:none;" />
             <input type="url" id="post-url-3" placeholder="Link do post 3" style="font-size:12px;font-family:Poppins,sans-serif;padding:8px 10px;border-radius:8px;border:0.5px solid #d1d5db;width:100%;outline:none;" />
+            <input type="url" id="post-url-4" placeholder="Link do post 4" style="font-size:12px;font-family:Poppins,sans-serif;padding:8px 10px;border-radius:8px;border:0.5px solid #d1d5db;width:100%;outline:none;" />
+            <input type="url" id="post-url-5" placeholder="Link do post 5" style="font-size:12px;font-family:Poppins,sans-serif;padding:8px 10px;border-radius:8px;border:0.5px solid #d1d5db;width:100%;outline:none;" />
           </div>
           <div style="display:flex;gap:8px;">
             <button onclick="savePostLinks()" class="btn-solid">Salvar</button>
@@ -880,7 +882,7 @@
       postsRef = db.ref('instagram_posts');
       postsRef.on('value', snap => {
         const data = snap.val();
-        postLinks = data ? [data.p1||'', data.p2||'', data.p3||''] : ['','',''];
+        postLinks = data ? [data.p1||'', data.p2||'', data.p3||'', data.p4||'', data.p5||''] : ['','','','',''];
         renderPostEmbeds();
       });
 
@@ -1519,7 +1521,7 @@
   }
 
   // ── INSTAGRAM POST EMBEDS ────────────────────────────────────
-  let postLinks = ['', '', ''];
+  let postLinks = ['', '', '', '', ''];
   let postsRef = null;
 
   function loadPostLinks() {
@@ -1534,7 +1536,7 @@
     ed.style.display = open ? 'none' : 'block';
     if (!open) {
       // populate inputs with current values
-      ['1','2','3'].forEach((n,i) => {
+      ['1','2','3','4','5'].forEach((n,i) => {
         const inp = document.getElementById('post-url-'+n);
         if (inp) inp.value = postLinks[i] || '';
       });
@@ -1545,8 +1547,10 @@
     const p1 = (document.getElementById('post-url-1')||{}).value || '';
     const p2 = (document.getElementById('post-url-2')||{}).value || '';
     const p3 = (document.getElementById('post-url-3')||{}).value || '';
-    postLinks = [p1, p2, p3];
-    if (postsRef) postsRef.set({ p1, p2, p3 });
+    const p4 = (document.getElementById('post-url-4')||{}).value || '';
+    const p5 = (document.getElementById('post-url-5')||{}).value || '';
+    postLinks = [p1, p2, p3, p4, p5];
+    if (postsRef) postsRef.set({ p1, p2, p3, p4, p5 });
     else renderPostEmbeds();
     togglePostEditor();
   }
