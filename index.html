@@ -1220,7 +1220,7 @@
     var full = d.toLocaleDateString("pt-BR",{weekday:"long",day:"2-digit",month:"long"});
     full = full.charAt(0).toUpperCase()+full.slice(1);
     var cursor = "pointer";
-    var onclick = calUnlocked ? " onclick=\"startLaunchEdit('"+l.id+"')\"" : " onclick=\"openCalPinGate()\"";
+    var onclick = calUnlocked ? " onclick=\"startLaunchEdit('"+l.id+"')\"" : " onclick=\"openPinGate()\"";
     var deleteBtn = calUnlocked ? "<div style=\"border-top:1px solid #fee2e2;margin-top:12px;padding-top:10px;padding-right:14px;text-align:right;\"><button onclick=\"event.stopPropagation();deleteLaunchWithPin('"+l.id+"')\" style=\"background:none;border:none;cursor:pointer;color:#DC2626;font-size:11px;font-weight:500;font-family:Poppins,sans-serif;\">🗑 Remover lançamento</button></div>" : "";
     return "<div"+onclick+" style=\"position:relative;background:#fff;border-radius:16px;overflow:hidden;cursor:"+cursor+";box-shadow:0 1px 4px rgba(0,0,0,0.07);border:1px solid #eef0f3;transition:all 0.15s;opacity:"+(isPast?"0.6":"1")+";\" onmouseover=\"this.style.boxShadow='0 6px 20px rgba(0,114,206,0.12)';this.style.borderColor='#0072CE40'\" onmouseout=\"this.style.boxShadow='0 1px 4px rgba(0,0,0,0.07)';this.style.borderColor='#eef0f3'\">"
       + "<div style=\"display:flex;align-items:stretch;\">"
