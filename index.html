@@ -482,6 +482,10 @@
           <label style="font-size:11px;font-weight:500;color:#6b7280;display:block;margin-bottom:4px;">Desconto / Oferta</label>
           <input type="text" id="ec-desconto" placeholder="Ex: 30% OFF nos 3 primeiros meses" style="width:100%;font-size:13px;font-family:Poppins,sans-serif;padding:9px 12px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;box-sizing:border-box;" />
         </div>
+        <div>
+          <label style="font-size:11px;font-weight:500;color:#6b7280;display:block;margin-bottom:4px;">Link da pasta de peças (Drive)</label>
+          <input type="url" id="ec-linkPecas" placeholder="https://drive.google.com/drive/folders/..." style="width:100%;font-size:13px;font-family:Poppins,sans-serif;padding:9px 12px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;box-sizing:border-box;" />
+        </div>
       </div>
       <div style="display:flex;gap:8px;justify-content:flex-end;">
         <button onclick="closeEditCampanha()" style="padding:9px 18px;border-radius:8px;border:1px solid #e2e4e9;background:#fff;font-size:13px;font-weight:500;cursor:pointer;font-family:Poppins,sans-serif;color:#374151;">Cancelar</button>
@@ -1307,7 +1311,8 @@
     document.getElementById('ec-produto').value = c.produto || '';
     document.getElementById('ec-desconto').value= c.desconto || '';
     document.getElementById('ec-validade').value= c.validade || '';
-    document.getElementById('ec-tema').value    = c.tema || '';
+    document.getElementById('ec-tema').value      = c.tema || '';
+    document.getElementById('ec-linkPecas').value  = c.linkPecas || '';
     modal.style.display = 'flex';
   }
 
@@ -1322,9 +1327,10 @@
     const produto = document.getElementById('ec-produto').value || '';
     const desconto= (document.getElementById('ec-desconto').value || '').trim();
     const validade= document.getElementById('ec-validade').value || '';
-    const tema    = (document.getElementById('ec-tema').value || '').trim();
+    const tema      = (document.getElementById('ec-tema').value || '').trim();
+    const linkPecas = (document.getElementById('ec-linkPecas').value || '').trim();
     if (!nome || !validade) { alert('Preencha nome e validade.'); return; }
-    const update = { nome, produto, desconto, validade, tema };
+    const update = { nome, produto, desconto, validade, tema, linkPecas };
     if (campRef) campRef.child(id).update(update);
     else {
       const c = campanhas.find(x => x.id === id);
@@ -1495,20 +1501,13 @@
 
           <!-- Peças -->
           <div style="border-top:0.5px solid #f0f0f0;padding-top:12px;">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-              <div style="font-size:11px;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:0.7px;">📁 Peças (${pecas.length})</div>
-              <div style="display:flex;align-items:center;gap:6px;">
-                <span id="upload-status-${c.id}" style="font-size:11px;color:#3B6D11;"></span>
-                <button onclick="triggerUpload('${c.id}')"
-                  style="font-size:11px;font-weight:500;color:#0072CE;background:#EBF4FF;border:none;border-radius:6px;padding:5px 10px;cursor:pointer;font-family:Poppins,sans-serif;display:inline-flex;align-items:center;gap:4px;">
-                  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 9l5 -5l5 5"/><path d="M12 4l0 12"/></svg>
-                  Upload
-                </button>
-                <input type="file" id="file-input-${safeId}" multiple style="display:none;"
-                  onchange="handleFileUpload('${c.id}', this)" />
-              </div>
-            </div>
-            <div style="display:flex;flex-direction:column;gap:4px;">${pecasHtml}</div>
+            ${c.linkPecas
+              ? `<a href="${c.linkPecas}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:#0072CE;background:#EBF4FF;border:none;border-radius:8px;padding:7px 14px;text-decoration:none;font-family:Poppins,sans-serif;">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M19 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M7 12l10 0"/></svg>
+                  📁 Ver peças
+                </a>`
+              : `<span style="font-size:12px;color:#9ca3af;">Nenhuma pasta vinculada.</span>`
+            }
           </div>
 
           <!-- Delete button -->
