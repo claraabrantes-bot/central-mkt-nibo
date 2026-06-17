@@ -1139,7 +1139,7 @@
         + "<button class=\"btn-solid\" data-id=\""+l.id+"\" onclick=\"saveLaunchEdit(this.dataset.id)\">Salvar</button>"
         + "<button class=\"btn-cancel\" onclick=\"cancelLaunchEdit()\">Cancelar</button>"
       + "</div>"
-      + deleteBtn
+      + "<div style=\"border-top:1px solid #fee2e2;margin-top:12px;padding-top:10px;padding-right:14px;text-align:right;\"><button onclick=\"event.stopPropagation();deleteLaunchWithPin('"+l.id+"')\" style=\"background:none;border:none;cursor:pointer;color:#DC2626;font-size:11px;font-weight:500;font-family:Poppins,sans-serif;\">🗑 Remover lançamento</button></div>"
     + "</div>";
   }
 
@@ -1218,7 +1218,7 @@
   }
   function openCampForm() {
     const f = document.getElementById('camp-form'); if (f) f.style.display = 'block';
-    ['cf-nome','cf-desconto','cf-validade','cf-pecas'].forEach(id => { const e = document.getElementById(id); if(e) e.value=''; });
+    ['cf-nome','cf-desconto','cf-validade','cf-pecas','cf-tema'].forEach(id => { const e = document.getElementById(id); if(e) e.value=''; });
     document.getElementById('cf-produto').value = '';
   }
   function closeCampForm() {
@@ -1230,8 +1230,9 @@
     const desconto = (document.getElementById('cf-desconto')||{}).value?.trim();
     const validade = (document.getElementById('cf-validade')||{}).value;
     const pecas    = (document.getElementById('cf-pecas')||{}).value?.trim();
+    const tema     = (document.getElementById('cf-tema')||{}).value?.trim();
     if (!nome || !validade) { alert('Preencha nome e validade.'); return; }
-    const entry = { nome, produto, desconto, validade, pecas, ativa: true };
+    const entry = { nome, produto, desconto, validade, pecas, tema, ativa: true };
     if (campRef) campRef.push(entry);
     else { campanhas.push({...entry, id: Date.now().toString()}); renderCampanhas(); }
     // ^ Firebase listener will auto-update UI when campRef fires
