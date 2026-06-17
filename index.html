@@ -1259,6 +1259,69 @@
     'Todos os produtos':       '#374151',
   };
 
+  function buildCampDeleteBtn(id) {
+    if (!campUnlocked) return '';
+    return "<div style=\"border-top:0.5px solid #fee2e2;margin-top:12px;padding-top:10px;text-align:right;\"><button onclick=\"deleteCampanha('" + id + "')\" style=\"background:none;border:none;cursor:pointer;color:#DC2626;font-size:11px;font-weight:500;font-family:Poppins,sans-serif;\">🗑 Remover campanha</button></div>";
+  }
+
+  function buildPecaDeleteBtn(campId, idx) {
+    if (!campUnlocked) return '';
+    return "<button onclick=\"deletePeca('" + campId + "'," + idx + ")\" style=\"background:none;border:none;cursor:pointer;color:#DC2626;padding:2px 4px;border-radius:4px;display:inline-flex;align-items:center;\" title=\"Remover peça\"><svg viewBox=\"0 0 24 24\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path stroke=\"none\" d=\"M0 0h24v24H0z\" fill=\"none\"/><path d=\"M4 7l16 0\"/><path d=\"M10 11l0 6\"/><path d=\"M14 11l0 6\"/><path d=\"M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12\"/><path d=\"M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3\"/></svg></button>";
+  }
+
+  function deletePeca(campId, idx) {
+    if (!campUnlocked) return;
+    const c = campanhas.find(x => x.id === campId);
+    if (!c) return;
+    const pecas = Array.isArray(c.pecas) ? [...c.pecas] : [];
+    pecas.splice(idx, 1);
+    if (campRef) campRef.child(campId).update({ pecas });
+    else { c.pecas = pecas; renderCampanhas(); }
+  }
+
+  function triggerUpload(campId) {
+    if (!campUnlocked) { openCampPinGate(); return; }
+    const safeId = campId.replace(/[^a-zA-Z0-9]/g, '_');
+    const inp = document.getElementById('file-input-' + safeId);
+    if (inp) inp.click();
+  }
+
+  function handleFileUpload(campId, input) {
+    const files = Array.from(input.files);
+    if (!files.length) return;
+    const statusEl = document.getElementById('upload-status-' + campId);
+    if (statusEl) statusEl.textContent = 'Enviando...';
+    const c = campanhas.find(x => x.id === campId);
+    if (!c) return;
+    const pecas = Array.isArray(c.pecas) ? [...c.pecas] : [];
+    let done = 0;
+    files.forEach(file => {
+      if (!storageRef) {
+        pecas.push({ nome: file.name, url: '#' });
+        done++;
+        if (done === files.length) {
+          if (campRef) campRef.child(campId).update({ pecas });
+          else { c.pecas = pecas; renderCampanhas(); }
+          if (statusEl) statusEl.textContent = '';
+        }
+        return;
+      }
+      const ref = storageRef.child('campanhas/' + campId + '/' + file.name);
+      ref.put(file).then(snap => snap.ref.getDownloadURL()).then(url => {
+        pecas.push({ nome: file.name, url });
+        done++;
+        if (done === files.length) {
+          campRef.child(campId).update({ pecas });
+          if (statusEl) statusEl.textContent = '';
+        }
+      }).catch(() => {
+        done++;
+        if (statusEl) statusEl.textContent = 'Erro no upload.';
+      });
+    });
+    input.value = '';
+  }
+
   function daysLeft(dateStr) {
     const today = new Date(); today.setHours(0,0,0,0);
     const d = new Date(dateStr+'T00:00:00'); d.setHours(0,0,0,0);
