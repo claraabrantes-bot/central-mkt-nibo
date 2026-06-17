@@ -1349,7 +1349,11 @@
       return;
     }
 
-    list.innerHTML = filtered.map(c => {
+    list.innerHTML = filtered.map(c => { try {
+      c.nome = c.nome || ''; c.produto = c.produto || ''; c.desconto = c.desconto || '';
+      c.validade = c.validade || ''; c.tema = c.tema || '';
+      c.pecas = Array.isArray(c.pecas) ? c.pecas : [];
+      if (!c.validade) return '';
       const dl = daysLeft(c.validade);
       const expired = dl < 0;
       const urgent  = dl >= 0 && dl <= 5;
@@ -1360,7 +1364,7 @@
       const badgeCo  = expired ? '#991B1B' : urgent ? '#92400E' : '#3B6D11';
       const badgeText = expired ? 'Encerrada' : dl === 0 ? 'Encerra hoje' : dl === 1 ? 'Encerra amanhã' : `Encerra em ${dl} dias`;
 
-      const pecas = Array.isArray(c.pecas) ? c.pecas : [];
+      const pecas = c.pecas;
       const safeId = c.id.replace(/[^a-zA-Z0-9]/g,'_');
 
       const pecasHtml = pecas.length ? pecas.map((p,i) => `
@@ -1416,7 +1420,7 @@
           <!-- Delete button -->
           ${buildCampDeleteBtn(c.id)}
         </div>
-      </div>`;
+      </div>`; } catch(e) { console.error('camp render err', e, c); return ''; }
     }).join('');
   }
 
