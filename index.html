@@ -183,6 +183,9 @@
       <button class="nav-item" onclick="navigate('arquivos',this)">
         <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2"/></svg></span> Pasta de Arquivos
       </button>
+      <button class="nav-item" onclick="navigate('utm',this)">
+        <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12l-4 0"/><path d="M7 12l-4 0"/><path d="M10 12a2 2 0 1 0 4 0"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/></svg></span> Gerador de UTM
+      </button>
       <button class="nav-item" onclick="navigate('embaixadores',this)">
         <span class="ico ico-16"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/><path d="M12 6l-3.293 3.293a1 1 0 0 0 0 1.414l.543 .543c.69 .69 1.81 .69 2.5 0l1 -1a3.182 3.182 0 0 1 4.5 0l2.25 2.25"/><path d="M12.5 15.5l2 2"/><path d="M15 13l2 2"/></svg></span> Embaixadores
       </button>
@@ -658,6 +661,140 @@
         <div id="emb-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:16px;align-items:start;"></div>
       </div>
 
+
+      <div class="section" id="section-utm">
+
+        <!-- PIN gate -->
+        <div id="utm-pin-gate" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:320px;gap:16px;">
+          <div style="font-size:32px;">🔗</div>
+          <div style="font-size:15px;font-weight:600;color:#1a1a2e;">Gerador de UTM</div>
+          <div style="font-size:13px;color:#6b7280;text-align:center;max-width:280px;">Digite o PIN do time para acessar o gerador de links UTM.</div>
+          <div style="display:flex;flex-direction:column;gap:8px;align-items:center;width:100%;max-width:260px;">
+            <input type="password" id="utm-pin-input" maxlength="6" placeholder="••••••"
+              style="width:100%;font-size:20px;letter-spacing:8px;text-align:center;padding:10px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;font-family:Poppins,sans-serif;"
+              onkeydown="if(event.key==='Enter')checkUtmPin()" />
+            <div id="utm-pin-error" style="font-size:12px;color:#E24B4A;display:none;">PIN incorreto.</div>
+            <button onclick="checkUtmPin()" style="width:100%;padding:10px;border-radius:8px;border:none;background:#0072CE;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:Poppins,sans-serif;">Entrar</button>
+          </div>
+        </div>
+
+        <!-- UTM Builder (shown after PIN) -->
+        <div id="utm-builder" style="display:none;">
+          <div style="margin-bottom:24px;">
+            <div style="font-size:15px;font-weight:600;color:#1a1a2e;margin-bottom:4px;">Gerador de UTM</div>
+            <div style="font-size:13px;color:#6b7280;">Preencha os campos e copie o link rastreável.</div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;">
+
+            <!-- Formulário -->
+            <div style="background:#fff;border-radius:16px;border:0.5px solid #e2e4e9;padding:24px;display:flex;flex-direction:column;gap:16px;">
+
+              <div>
+                <label style="font-size:11px;font-weight:600;color:#374151;display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">URL base *</label>
+                <input type="url" id="utm-url" placeholder="https://conteudo.nibo.com.br/contato-contador"
+                  oninput="buildUtm()"
+                  style="width:100%;font-size:13px;font-family:Poppins,sans-serif;padding:10px 12px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;box-sizing:border-box;" />
+                <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px;" id="utm-url-suggestions"></div>
+              </div>
+
+              <div>
+                <label style="font-size:11px;font-weight:600;color:#374151;display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">utm_source *</label>
+                <input type="text" id="utm-source" placeholder="ex: hs_email, meta, webinar..."
+                  oninput="buildUtm()"
+                  style="width:100%;font-size:13px;font-family:Poppins,sans-serif;padding:10px 12px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;box-sizing:border-box;" />
+                <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px;">
+                  <span style="font-size:11px;color:#6b7280;margin-right:2px;">Sugestões:</span>
+                  <button onclick="setUtm('source','hs_email')" class="utm-tag">hs_email</button>
+                  <button onclick="setUtm('source','ferramenta')" class="utm-tag">ferramenta</button>
+                  <button onclick="setUtm('source','webinar')" class="utm-tag">webinar</button>
+                  <button onclick="setUtm('source','meta')" class="utm-tag">meta</button>
+                  <button onclick="setUtm('source','instagram')" class="utm-tag">instagram</button>
+                  <button onclick="setUtm('source','inapp')" class="utm-tag">inapp</button>
+                  <button onclick="setUtm('source','whatsapp')" class="utm-tag">whatsapp</button>
+                  <button onclick="setUtm('source','blog')" class="utm-tag">blog</button>
+                  <button onclick="setUtm('source','linkthree')" class="utm-tag">linkthree</button>
+                  <button onclick="setUtm('source','embaixadores')" class="utm-tag">embaixadores</button>
+                  <button onclick="setUtm('source','evento')" class="utm-tag">evento</button>
+                  <button onclick="setUtm('source','adwords')" class="utm-tag">adwords</button>
+                  <button onclick="setUtm('source','email')" class="utm-tag">email</button>
+                  <button onclick="setUtm('source','parceiros')" class="utm-tag">parceiros</button>
+                </div>
+              </div>
+
+              <div>
+                <label style="font-size:11px;font-weight:600;color:#374151;display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">utm_medium *</label>
+                <input type="text" id="utm-medium" placeholder="ex: email_campaing, banner, webinar..."
+                  oninput="buildUtm()"
+                  style="width:100%;font-size:13px;font-family:Poppins,sans-serif;padding:10px 12px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;box-sizing:border-box;" />
+                <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px;">
+                  <span style="font-size:11px;color:#6b7280;margin-right:2px;">Sugestões:</span>
+                  <button onclick="setUtm('medium','email_campaing')" class="utm-tag">email_campaing</button>
+                  <button onclick="setUtm('medium','webinar')" class="utm-tag">webinar</button>
+                  <button onclick="setUtm('medium','ferramenta')" class="utm-tag">ferramenta</button>
+                  <button onclick="setUtm('medium','banner')" class="utm-tag">banner</button>
+                  <button onclick="setUtm('medium','linkthree')" class="utm-tag">linkthree</button>
+                  <button onclick="setUtm('medium','instagram')" class="utm-tag">instagram</button>
+                  <button onclick="setUtm('medium','whatsapp')" class="utm-tag">whatsapp</button>
+                  <button onclick="setUtm('medium','mensagem')" class="utm-tag">mensagem</button>
+                  <button onclick="setUtm('medium','automacao')" class="utm-tag">automacao</button>
+                  <button onclick="setUtm('medium','inapp_campaing')" class="utm-tag">inapp_campaing</button>
+                  <button onclick="setUtm('medium','live')" class="utm-tag">live</button>
+                  <button onclick="setUtm('medium','tv')" class="utm-tag">tv</button>
+                  <button onclick="setUtm('medium','panfleto')" class="utm-tag">panfleto</button>
+                  <button onclick="setUtm('medium','influencer')" class="utm-tag">influencer</button>
+                </div>
+              </div>
+
+              <div>
+                <label style="font-size:11px;font-weight:600;color:#374151;display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">utm_campaign *</label>
+                <input type="text" id="utm-campaign" placeholder="ex: webinar-lancamento-produto"
+                  oninput="buildUtm()"
+                  style="width:100%;font-size:13px;font-family:Poppins,sans-serif;padding:10px 12px;border-radius:8px;border:0.5px solid #d1d5db;outline:none;box-sizing:border-box;" />
+                <div style="font-size:11px;color:#9ca3af;margin-top:5px;">Use letras minúsculas, números e hífens. Sem espaços ou acentos.</div>
+              </div>
+
+              <button onclick="resetUtm()" style="align-self:flex-start;background:none;border:1px solid #e2e4e9;border-radius:8px;padding:7px 16px;font-size:12px;font-weight:500;cursor:pointer;font-family:Poppins,sans-serif;color:#6b7280;">Limpar campos</button>
+            </div>
+
+            <!-- Preview e resultado -->
+            <div style="display:flex;flex-direction:column;gap:16px;">
+
+              <!-- URL gerada -->
+              <div style="background:#fff;border-radius:16px;border:0.5px solid #e2e4e9;padding:24px;">
+                <div style="font-size:12px;font-weight:600;color:#374151;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;">URL gerada</div>
+                <div id="utm-result" style="font-size:12px;color:#374151;word-break:break-all;line-height:1.7;background:#f8faff;border:0.5px solid #dbeafe;border-radius:8px;padding:14px;min-height:60px;font-family:monospace;">
+                  <span style="color:#9ca3af;">Preencha os campos para gerar o link.</span>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:12px;">
+                  <button id="utm-copy-btn" onclick="copyUtm()" style="display:none;flex:1;padding:10px;border-radius:8px;border:none;background:#0072CE;color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:Poppins,sans-serif;">Copiar link</button>
+                </div>
+              </div>
+
+              <!-- Dica de nomenclatura -->
+              <div style="background:#FFFBEB;border:0.5px solid #FDE68A;border-radius:12px;padding:16px;">
+                <div style="font-size:12px;font-weight:600;color:#92400E;margin-bottom:8px;">Regras de nomenclatura</div>
+                <div style="font-size:12px;color:#78350F;line-height:1.7;">
+                  <b>source:</b> origem do tráfego (hs_email, meta, ferramenta...)<br>
+                  <b>medium:</b> tipo de mídia (email_campaing, banner, webinar...)<br>
+                  <b>campaign:</b> nome da ação em minúsculas com hífens<br><br>
+                  Ex: <code style="background:#FEF3C7;padding:2px 5px;border-radius:4px;">webinar-lancamento-produto</code>
+                </div>
+              </div>
+
+              <!-- Histórico -->
+              <div style="background:#fff;border-radius:16px;border:0.5px solid #e2e4e9;padding:20px;">
+                <div style="font-size:12px;font-weight:600;color:#374151;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;">Gerados nesta sessão</div>
+                <div id="utm-history" style="display:flex;flex-direction:column;gap:8px;">
+                  <span style="font-size:12px;color:#9ca3af;">Nenhum link gerado ainda.</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -702,6 +839,7 @@
     social:   ['Redes Sociais',   'Calendário editorial nas redes'],
     arquivos: ['Pasta de Arquivos',     'Links centralizados para o time'],
     embaixadores:['Embaixadores', 'Links e materiais dos embaixadores'],
+    utm:       ['Gerador de UTM', 'Crie links rastreáveis com parâmetros UTM'],
   };
 
   const cards = [
@@ -1824,6 +1962,82 @@ Retorne APENAS um JSON válido, sem markdown, sem explicação, neste formato ex
       const btn = el.nextElementSibling;
       if (btn) { btn.textContent = 'Copiado!'; setTimeout(() => { btn.textContent = 'Copiar'; }, 2000); }
     });
+  }
+
+
+  // ── UTM GENERATOR ───────────────────────────────────────────
+  let utmUnlocked = false;
+  let utmHistory  = [];
+
+  function checkUtmPin() {
+    const inp = document.getElementById('utm-pin-input');
+    if (inp && inp.value === CORRECT_PIN) {
+      utmUnlocked = true;
+      document.getElementById('utm-pin-gate').style.display = 'none';
+      document.getElementById('utm-builder').style.display = 'block';
+    } else {
+      const err = document.getElementById('utm-pin-error');
+      if (err) err.style.display = 'block';
+      if (inp) inp.value = '';
+    }
+  }
+
+  function setUtm(field, value) {
+    const el = document.getElementById('utm-' + field);
+    if (el) { el.value = value; buildUtm(); }
+  }
+
+  function buildUtm() {
+    const url      = (document.getElementById('utm-url')      || {}).value || '';
+    const source   = (document.getElementById('utm-source')   || {}).value.trim() || '';
+    const medium   = (document.getElementById('utm-medium')   || {}).value.trim() || '';
+    const campaign = (document.getElementById('utm-campaign') || {}).value.trim() || '';
+    const resultEl = document.getElementById('utm-result');
+    const copyBtn  = document.getElementById('utm-copy-btn');
+    if (!resultEl) return;
+    if (!url || !source || !medium || !campaign) {
+      resultEl.innerHTML = '<span style="color:#9ca3af;">Preencha os campos para gerar o link.</span>';
+      if (copyBtn) copyBtn.style.display = 'none';
+      return;
+    }
+    const base = url.split('?')[0];
+    const full = base + '?utm_source=' + encodeURIComponent(source) + '&utm_medium=' + encodeURIComponent(medium) + '&utm_campaign=' + encodeURIComponent(campaign);
+    resultEl.textContent = full;
+    if (copyBtn) copyBtn.style.display = 'block';
+    if (!utmHistory.includes(full)) {
+      utmHistory.unshift(full);
+      if (utmHistory.length > 8) utmHistory.pop();
+      renderUtmHistory();
+    }
+  }
+
+  function renderUtmHistory() {
+    const el = document.getElementById('utm-history');
+    if (!el) return;
+    if (!utmHistory.length) { el.innerHTML = '<span style="font-size:12px;color:#9ca3af;">Nenhum link gerado ainda.</span>'; return; }
+    el.innerHTML = utmHistory.map(function(u) {
+      const short = u.length > 60 ? u.slice(0, 60) + '...' : u;
+      return '<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:0.5px solid #f0f0f0;">'
+        + '<div style="flex:1;font-size:11px;color:#374151;word-break:break-all;font-family:monospace;">' + short + '</div>'
+        + '<button onclick="navigator.clipboard.writeText(decodeURIComponent(' + "'" + encodeURIComponent(u) + "'" + '))" style="flex-shrink:0;background:none;border:1px solid #e2e4e9;border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:Poppins,sans-serif;color:#0072CE;">Copiar</button>'
+        + '</div>';
+    }).join('');
+  }
+
+  function copyUtm() {
+    const el = document.getElementById('utm-result');
+    if (!el) return;
+    navigator.clipboard.writeText(el.textContent).then(function() {
+      const btn = document.getElementById('utm-copy-btn');
+      if (btn) { btn.textContent = 'Copiado!'; setTimeout(function() { btn.textContent = 'Copiar link'; }, 2000); }
+    });
+  }
+
+  function resetUtm() {
+    ['utm-url','utm-source','utm-medium','utm-campaign'].forEach(function(id) {
+      const el = document.getElementById(id); if (el) el.value = '';
+    });
+    buildUtm();
   }
 
 </script>
