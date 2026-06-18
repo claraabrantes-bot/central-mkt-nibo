@@ -1358,6 +1358,17 @@
     'Todos os produtos':       '#374151',
   };
 
+  function buildCampActionBar(id) {
+    const editDelete = campUnlocked
+      ? "<button onclick=\"event.stopPropagation();openEditCampanha('"+id+"')\" style=\"background:none;border:1px solid #0072CE;border-radius:6px;cursor:pointer;color:#0072CE;font-size:11px;font-weight:500;font-family:Poppins,sans-serif;padding:5px 12px;\">✏️ Editar</button>"
+        + "<button onclick=\"event.stopPropagation();deleteCampanha('"+id+"')\" style=\"background:none;border:none;cursor:pointer;color:#DC2626;font-size:11px;font-weight:500;font-family:Poppins,sans-serif;\">🗑 Remover</button>"
+      : "";
+    return "<div onclick=\"event.stopPropagation()\" style=\"border-top:0.5px solid #f0f0f0;margin-top:12px;padding-top:10px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;\">"
+      + "<button onclick=\"event.stopPropagation();openGerarAbordagem('"+id+"')\" style=\"background:linear-gradient(135deg,#0072CE,#002D72);border:none;border-radius:6px;cursor:pointer;color:#fff;font-size:11px;font-weight:600;font-family:Poppins,sans-serif;padding:6px 12px;display:inline-flex;align-items:center;gap:4px;\">✨ Gerar abordagem</button>"
+      + "<div style=\"display:flex;gap:8px;align-items:center;\">" + editDelete + "</div>"
+      + "</div>";
+  }
+
   function buildCampDeleteBtn(id) {
     if (!campUnlocked) return '';
     return "<div onclick=\"event.stopPropagation()\" style=\"border-top:0.5px solid #f0f0f0;margin-top:12px;padding-top:10px;display:flex;justify-content:space-between;align-items:center;\">"
@@ -1514,7 +1525,7 @@
           </div>
 
           <!-- Delete button -->
-          ${buildCampDeleteBtn(c.id)}
+          ${buildCampActionBar(c.id)}
         </div>
       </div>`; } catch(e) { console.error('camp render err', e, c); return ''; }
     }).join('');
@@ -1705,5 +1716,156 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
   <script>initFirebase();</script>
+
+  <!-- MODAL GERAR ABORDAGEM IA -->
+  <div id="gerar-abordagem-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:1000;align-items:center;justify-content:center;padding:16px;">
+    <div style="background:#fff;border-radius:16px;padding:28px 24px;max-width:560px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,0.2);max-height:90vh;overflow-y:auto;">
+      <div style="font-size:15px;font-weight:700;color:#1a1a2e;margin-bottom:4px;">✨ Gerar abordagem com IA</div>
+      <div id="ga-campanha-nome" style="font-size:12px;color:#6b7280;margin-bottom:18px;"></div>
+
+      <!-- Público -->
+      <div style="margin-bottom:16px;">
+        <div style="font-size:11px;font-weight:600;color:#374151;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">Para quem é essa abordagem?</div>
+        <div style="display:flex;gap:8px;">
+          <button id="ga-btn-contador" onclick="selectPublico('contador')"
+            style="flex:1;padding:10px;border-radius:10px;border:1.5px solid #e2e4e9;background:#fff;font-size:12px;font-weight:500;cursor:pointer;font-family:Poppins,sans-serif;color:#374151;transition:all 0.15s;">
+            🧾 Contador
+          </button>
+          <button id="ga-btn-empresa" onclick="selectPublico('empresa')"
+            style="flex:1;padding:10px;border-radius:10px;border:1.5px solid #e2e4e9;background:#fff;font-size:12px;font-weight:500;cursor:pointer;font-family:Poppins,sans-serif;color:#374151;transition:all 0.15s;">
+            🏢 Empresa
+          </button>
+        </div>
+      </div>
+
+      <!-- Gerar button -->
+      <div style="display:flex;gap:8px;margin-bottom:20px;">
+        <button onclick="closeGerarAbordagem()" style="padding:10px 18px;border-radius:8px;border:1px solid #e2e4e9;background:#fff;font-size:13px;font-weight:500;cursor:pointer;font-family:Poppins,sans-serif;color:#374151;">Cancelar</button>
+        <button id="ga-gerar-btn" onclick="gerarAbordagem()"
+          style="flex:1;padding:10px 18px;border-radius:8px;border:none;background:linear-gradient(135deg,#0072CE,#002D72);color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:Poppins,sans-serif;">
+          Gerar textos
+        </button>
+      </div>
+
+      <!-- Resultado -->
+      <div id="ga-resultado" style="display:none;">
+        <div style="border-top:0.5px solid #f0f0f0;padding-top:20px;display:flex;flex-direction:column;gap:16px;">
+
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#0072CE;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px;">📞 SDR — Primeiro contato</div>
+            <div id="ga-sdr-text" style="background:#f8faff;border:0.5px solid #dbeafe;border-radius:10px;padding:14px;font-size:12px;line-height:1.75;color:#1a1a2e;white-space:pre-wrap;"></div>
+            <button onclick="copiarTexto('ga-sdr-text')" style="margin-top:6px;background:none;border:none;cursor:pointer;color:#0072CE;font-size:11px;font-weight:500;font-family:Poppins,sans-serif;">📋 Copiar</button>
+          </div>
+
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#002D72;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:8px;">🤝 CS — Upsell / Retenção</div>
+            <div id="ga-cs-text" style="background:#f0f9f0;border:0.5px solid #bbf7d0;border-radius:10px;padding:14px;font-size:12px;line-height:1.75;color:#1a1a2e;white-space:pre-wrap;"></div>
+            <button onclick="copiarTexto('ga-cs-text')" style="margin-top:6px;background:none;border:none;cursor:pointer;color:#002D72;font-size:11px;font-weight:500;font-family:Poppins,sans-serif;">📋 Copiar</button>
+          </div>
+
+        </div>
+      </div>
+
+      <div id="ga-loading" style="display:none;text-align:center;padding:24px 0;">
+        <div style="font-size:13px;color:#6b7280;font-family:Poppins,sans-serif;">✨ Gerando textos...</div>
+      </div>
+
+      <div id="ga-erro" style="display:none;background:#FEF2F2;border:0.5px solid #FECACA;border-radius:8px;padding:12px;font-size:12px;color:#DC2626;font-family:Poppins,sans-serif;"></div>
+    </div>
+  </div>
+
+  // ── GERAR ABORDAGEM IA ──────────────────────────────────────
+  let gaPublico = null;
+  let gaCampanhaId = null;
+
+  function openGerarAbordagem(id) {
+    const c = campanhas.find(x => x.id === id);
+    if (!c) return;
+    gaCampanhaId = id;
+    gaPublico = null;
+    document.getElementById('ga-campanha-nome').textContent = c.nome + (c.produto ? ' · ' + c.produto : '');
+    document.getElementById('ga-resultado').style.display = 'none';
+    document.getElementById('ga-loading').style.display = 'none';
+    document.getElementById('ga-erro').style.display = 'none';
+    document.getElementById('ga-sdr-text').textContent = '';
+    document.getElementById('ga-cs-text').textContent = '';
+    selectPublico(null);
+    document.getElementById('gerar-abordagem-modal').style.display = 'flex';
+  }
+
+  function closeGerarAbordagem() {
+    document.getElementById('gerar-abordagem-modal').style.display = 'none';
+  }
+
+  function selectPublico(tipo) {
+    gaPublico = tipo;
+    const btnC = document.getElementById('ga-btn-contador');
+    const btnE = document.getElementById('ga-btn-empresa');
+    if (btnC) { btnC.style.border = tipo === 'contador' ? '1.5px solid #0072CE' : '1.5px solid #e2e4e9'; btnC.style.background = tipo === 'contador' ? '#EBF4FF' : '#fff'; btnC.style.color = tipo === 'contador' ? '#0072CE' : '#374151'; }
+    if (btnE) { btnE.style.border = tipo === 'empresa' ? '1.5px solid #0072CE' : '1.5px solid #e2e4e9'; btnE.style.background = tipo === 'empresa' ? '#EBF4FF' : '#fff'; btnE.style.color = tipo === 'empresa' ? '#0072CE' : '#374151'; }
+  }
+
+  async function gerarAbordagem() {
+    if (!gaPublico) { alert('Selecione o público: Contador ou Empresa.'); return; }
+    const c = campanhas.find(x => x.id === gaCampanhaId);
+    if (!c) return;
+
+    document.getElementById('ga-loading').style.display = 'block';
+    document.getElementById('ga-resultado').style.display = 'none';
+    document.getElementById('ga-erro').style.display = 'none';
+    document.getElementById('ga-gerar-btn').disabled = true;
+
+    const publicoLabel = gaPublico === 'contador' ? 'contadores e escritórios de contabilidade' : 'empresas (clientes finais)';
+    const prompt = `Você é um especialista em vendas B2B SaaS para o Nibo, software financeiro e contábil brasileiro.
+
+Crie dois textos de WhatsApp para abordar ${publicoLabel} sobre a seguinte campanha ativa:
+
+Campanha: ${c.nome}
+Produto: ${c.produto || 'Nibo'}
+Desconto/Oferta: ${c.desconto || 'oferta especial'}
+Válida até: ${c.validade}
+Tema: ${c.tema || ''}
+
+Retorne APENAS um JSON válido, sem markdown, sem explicação, neste formato exato:
+{
+  "sdr": "texto para SDR (primeiro contato, cliente ainda não conhece a oferta, máx 5 linhas, tom leve e direto, mencione a oferta e urgência da validade, CTA para agendar conversa)",
+  "cs": "texto para CS (cliente já usa Nibo, foco em upsell ou retenção, máx 5 linhas, tom próximo e consultivo, mencione benefício prático da oferta, CTA para confirmar aproveitamento)"
+}`;
+
+    try {
+      const resp = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 1000,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+      const data = await resp.json();
+      const raw = data.content && data.content[0] && data.content[0].text ? data.content[0].text : '';
+      const clean = raw.replace(/```json|```/g, '').trim();
+      const parsed = JSON.parse(clean);
+      document.getElementById('ga-sdr-text').textContent = parsed.sdr || '';
+      document.getElementById('ga-cs-text').textContent = parsed.cs || '';
+      document.getElementById('ga-resultado').style.display = 'block';
+    } catch(e) {
+      document.getElementById('ga-erro').style.display = 'block';
+      document.getElementById('ga-erro').textContent = 'Erro ao gerar textos. Tente novamente.';
+    } finally {
+      document.getElementById('ga-loading').style.display = 'none';
+      document.getElementById('ga-gerar-btn').disabled = false;
+    }
+  }
+
+  function copiarTexto(elId) {
+    const el = document.getElementById(elId);
+    if (!el) return;
+    navigator.clipboard.writeText(el.textContent).then(() => {
+      const btn = el.nextElementSibling;
+      if (btn) { btn.textContent = '✅ Copiado!'; setTimeout(() => { btn.textContent = '📋 Copiar'; }, 2000); }
+    });
+  }
+
 </body>
 </html>
