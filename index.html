@@ -1735,14 +1735,18 @@
 
   function selectPublico(tipo) {
     gaPublico = tipo;
-    const btnC = document.getElementById('ga-btn-contador');
-    const btnE = document.getElementById('ga-btn-empresa');
-    if (btnC) { btnC.style.border = tipo === 'contador' ? '1.5px solid #0072CE' : '1.5px solid #e2e4e9'; btnC.style.background = tipo === 'contador' ? '#EBF4FF' : '#fff'; btnC.style.color = tipo === 'contador' ? '#0072CE' : '#374151'; }
-    if (btnE) { btnE.style.border = tipo === 'empresa' ? '1.5px solid #0072CE' : '1.5px solid #e2e4e9'; btnE.style.background = tipo === 'empresa' ? '#EBF4FF' : '#fff'; btnE.style.color = tipo === 'empresa' ? '#0072CE' : '#374151'; }
+    ['contador','empresa','bpo'].forEach(t => {
+      const btn = document.getElementById('ga-btn-' + t);
+      if (!btn) return;
+      const active = tipo === t;
+      btn.style.border = active ? '1.5px solid #0072CE' : '1.5px solid #e2e4e9';
+      btn.style.background = active ? '#EBF4FF' : '#fff';
+      btn.style.color = active ? '#0072CE' : '#374151';
+    });
   }
 
   async function gerarAbordagem() {
-    if (!gaPublico) { alert('Selecione o público: Contador ou Empresa.'); return; }
+    if (!gaPublico) { alert('Selecione o público.'); return; }
     const c = campanhas.find(x => x.id === gaCampanhaId);
     if (!c) return;
 
@@ -1751,7 +1755,7 @@
     document.getElementById('ga-erro').style.display = 'none';
     document.getElementById('ga-gerar-btn').disabled = true;
 
-    const publicoLabel = gaPublico === 'contador' ? 'contadores e escritórios de contabilidade' : 'empresas (clientes finais)';
+    const publicoLabel = gaPublico === 'contador' ? 'contadores e escritórios de contabilidade' : gaPublico === 'bpo' ? 'empresas de BPO Financeiro (prestadores de serviço financeiro terceirizado)' : 'empresas (clientes finais)';
     const prompt = `Você é um especialista em vendas B2B SaaS para o Nibo, software financeiro e contábil brasileiro.
 
 Crie dois textos de WhatsApp para abordar ${publicoLabel} sobre a seguinte campanha ativa:
@@ -1827,6 +1831,10 @@ Retorne APENAS um JSON válido, sem markdown, sem explicação, neste formato ex
           <button id="ga-btn-empresa" onclick="selectPublico('empresa')"
             style="flex:1;padding:10px;border-radius:10px;border:1.5px solid #e2e4e9;background:#fff;font-size:12px;font-weight:500;cursor:pointer;font-family:Poppins,sans-serif;color:#374151;transition:all 0.15s;">
             🏢 Empresa
+          </button>
+          <button id="ga-btn-bpo" onclick="selectPublico('bpo')"
+            style="flex:1;padding:10px;border-radius:10px;border:1.5px solid #e2e4e9;background:#fff;font-size:12px;font-weight:500;cursor:pointer;font-family:Poppins,sans-serif;color:#374151;transition:all 0.15s;">
+            💼 BPO Financeiro
           </button>
         </div>
       </div>
