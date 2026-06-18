@@ -1269,6 +1269,20 @@
       document.getElementById('camp-pin-input').value = '';
     }
   }
+  function closeUploadPin() {
+    const g = document.getElementById('upload-pin-gate'); if (g) g.style.display = 'none';
+  }
+  function checkUploadPin() {
+    const inp = document.getElementById('upload-pin-input');
+    if (inp && inp.value === CORRECT_PIN) {
+      closeUploadPin();
+    } else {
+      const err = document.getElementById('upload-pin-error');
+      if (err) err.style.display = 'block';
+      if (inp) inp.value = '';
+    }
+  }
+
   function lockCamp() {
     campUnlocked = false;
     renderCampanhas();
