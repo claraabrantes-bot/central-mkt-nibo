@@ -1072,7 +1072,8 @@
 
   function updateActiveMonthLabel() {
     const el = document.getElementById('active-month-label');
-    if (!el || !activeMonth) return;
+    if (!el) return;
+    if (!activeMonth) { el.textContent = 'Todos'; return; }
     const d = new Date(activeMonth + '-01T12:00:00');
     const label = d.toLocaleString('pt-BR', {month:'long', year:'numeric'});
     el.textContent = label.charAt(0).toUpperCase() + label.slice(1);
@@ -1093,8 +1094,8 @@
     if (wrap) wrap.style.display = 'none';
     const chev = document.getElementById('month-tabs-chevron');
     if (chev) chev.style.transform = '';
+    updateActiveMonthLabel();
     renderLaunches();
-  }
 
   const PT_MONTHS = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
 
