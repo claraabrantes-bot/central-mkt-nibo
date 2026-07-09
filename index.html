@@ -1421,12 +1421,12 @@
     renderCards();
   }
 
-  function goToNav(id) {
+  window.goToNav = function goToNav(id) {
     const map = { produto:1, campanhas:2, social:3, arquivos:4, embaixadores:5 };
     navigate(id, document.querySelectorAll('.nav-item')[map[id]]);
   }
 
-  function navigate(id, btn, pushState = true) {
+  window.navigate = function navigate(id, btn, pushState = true) {
     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     if (!btn) btn = document.querySelector(`.nav-item[onclick*="'${id}'"]`);
