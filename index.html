@@ -985,18 +985,18 @@
     }
   });
 
-  function toggleFav(id, e) {
+  window.toggleFav = function toggleFav(id, e) {
     e.stopPropagation();
     favs.has(id) ? favs.delete(id) : favs.add(id);
     renderCards();
   }
 
-  function goToNav(id) {
+  window.goToNav = function goToNav(id) {
     const map = { produto:1, campanhas:2, social:3, arquivos:4, embaixadores:5 };
     navigate(id, document.querySelectorAll('.nav-item')[map[id]]);
   }
 
-  function navigate(id, btn, pushState = true) {
+  window.navigate = function navigate(id, btn, pushState = true) {
     document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     if (!btn) btn = document.querySelector(`.nav-item[onclick*="'${id}'"]`);
@@ -1095,7 +1095,7 @@
 
   let editingLaunchId = null;
 
-  function startLaunchEdit(id) {
+  window.startLaunchEdit = function startLaunchEdit(id) {
     if (!calUnlocked) {
       // ask pin inline
       pendingEditId = id;
@@ -1107,7 +1107,7 @@
   }
   var pendingEditId = null;
   function cancelLaunchEdit() { editingLaunchId = null; renderLaunches(); }
-  function saveLaunchEdit(id) {
+  window.saveLaunchEdit = function saveLaunchEdit(id) {
     const name   = (document.getElementById('edit-name')||{}).value?.trim();
     const date   = (document.getElementById('edit-date')||{}).value;
     const desc   = (document.getElementById('edit-desc')||{}).value?.trim();
@@ -1136,16 +1136,16 @@
   let campanhas = [];
   let campRef = null;
 
-  function openPinGate() {
+  window.openPinGate = function openPinGate() {
     document.getElementById('pin-gate').style.display = 'flex';
     document.getElementById('pin-input').value = '';
     document.getElementById('pin-error').style.display = 'none';
     setTimeout(()=>document.getElementById('pin-input').focus(), 100);
   }
-  function closePinGate() {
+  window.closePinGate = function closePinGate() {
     document.getElementById('pin-gate').style.display = 'none';
   }
-  function checkPin() {
+  window.checkPin = function checkPin() {
     const val = document.getElementById('pin-input').value;
     if (val === CORRECT_PIN) {
       calUnlocked = true;
@@ -1173,7 +1173,7 @@
       document.getElementById('pin-input').focus();
     }
   }
-  function lockCalendar() {
+  window.lockCalendar = function lockCalendar() {
     calUnlocked = false;
     editingLaunchId = null;
     renderLaunches();
@@ -1187,7 +1187,7 @@
   }
   var pendingAction = null;
 
-  function toggleForm() {
+  window.toggleForm = function toggleForm() {
     if (!calUnlocked) { openPinGate(); return; }
     document.getElementById('add-form').classList.toggle('open');
   }
@@ -1208,7 +1208,7 @@
     return Math.round((d - today) / 86400000);
   }
 
-  function addLaunch() {
+  window.addLaunch = function addLaunch() {
     const name = document.getElementById('f-name').value.trim();
     const date = document.getElementById('f-date').value;
     if (!name || !date) { alert('Preencha nome e data.'); return; }
@@ -1246,24 +1246,24 @@
     var modal = document.getElementById("confirm-delete-modal");
     if (modal) modal.style.display = "flex";
   }
-  function closeConfirmDelete() {
+  window.closeConfirmDelete = function closeConfirmDelete() {
     confirmDeleteId = null;
     var modal = document.getElementById("confirm-delete-modal");
     if (modal) modal.style.display = "none";
   }
-  function confirmDelete() {
+  window.confirmDelete = function confirmDelete() {
     closeConfirmDelete();
     if (confirmDeleteId) { deleteLaunch(confirmDeleteId); confirmDeleteId = null; }
   }
 
-  function deleteLaunch(id) {
+  window.deleteLaunch = function deleteLaunch(id) {
     if (launchesRef) launchesRef.child(id).remove(); else { launches = launches.filter(l=>l.id!==id); renderLaunches(); }
   }
 
   // Track displayed year separately
   let activeYear = 2026;
 
-  function toggleMonthTabs() {
+  window.toggleMonthTabs = function toggleMonthTabs() {
     const wrap = document.getElementById('month-tabs-wrap');
     const chevron = document.getElementById('month-tabs-chevron');
     if (!wrap) return;
@@ -1281,7 +1281,7 @@
     el.textContent = label.charAt(0).toUpperCase() + label.slice(1);
   }
 
-  function goToToday() {
+  window.goToToday = function goToToday() {
     const now = new Date();
     activeYear = now.getFullYear();
     activeMonth = now.toISOString().slice(0,7);
@@ -1452,14 +1452,14 @@
   }
 
 
-  function openCampPinGate() {
+  window.openCampPinGate = function openCampPinGate() {
     const g = document.getElementById('camp-pin-gate');
     if (g) { g.style.display = 'flex'; document.getElementById('camp-pin-input').value = ''; document.getElementById('camp-pin-error').style.display = 'none'; setTimeout(()=>document.getElementById('camp-pin-input').focus(),100); }
   }
-  function closeCampPinGate() {
+  window.closeCampPinGate = function closeCampPinGate() {
     const g = document.getElementById('camp-pin-gate'); if (g) g.style.display = 'none';
   }
-  function checkCampPin() {
+  window.checkCampPin = function checkCampPin() {
     if (document.getElementById('camp-pin-input').value === CORRECT_PIN) {
       campUnlocked = true; closeCampPinGate();
       document.getElementById('camp-lock-btn').style.display = 'none';
@@ -1471,10 +1471,10 @@
       document.getElementById('camp-pin-input').value = '';
     }
   }
-  function closeUploadPin() {
+  window.closeUploadPin = function closeUploadPin() {
     const g = document.getElementById('upload-pin-gate'); if (g) g.style.display = 'none';
   }
-  function checkUploadPin() {
+  window.checkUploadPin = function checkUploadPin() {
     const inp = document.getElementById('upload-pin-input');
     if (inp && inp.value === CORRECT_PIN) {
       closeUploadPin();
@@ -1485,7 +1485,7 @@
     }
   }
 
-  function lockCamp() {
+  window.lockCamp = function lockCamp() {
     campUnlocked = false;
     renderCampanhas();
     document.getElementById('camp-lock-btn').style.display = 'inline-flex';
@@ -1493,15 +1493,15 @@
     document.getElementById('camp-relock-btn').style.display = 'none';
     closeCampForm();
   }
-  function openCampForm() {
+  window.openCampForm = function openCampForm() {
     const f = document.getElementById('camp-form'); if (f) f.style.display = 'block';
     ['cf-nome','cf-desconto','cf-validade','cf-tema'].forEach(id => { const e = document.getElementById(id); if(e) e.value=''; });
     document.getElementById('cf-produto').value = '';
   }
-  function closeCampForm() {
+  window.closeCampForm = function closeCampForm() {
     const f = document.getElementById('camp-form'); if (f) f.style.display = 'none';
   }
-  function saveCampanha() {
+  window.saveCampanha = function saveCampanha() {
     const nome     = (document.getElementById('cf-nome')||{}).value?.trim();
     const produto  = (document.getElementById('cf-produto')||{}).value;
     const desconto = (document.getElementById('cf-desconto')||{}).value?.trim();
@@ -1521,7 +1521,7 @@
     else { campanhas = campanhas.filter(c => c.id !== id); renderCampanhas(); }
   }
 
-  function openEditCampanha(id) {
+  window.openEditCampanha = function openEditCampanha(id) {
     const c = campanhas.find(x => x.id === id);
     if (!c) return;
     const modal = document.getElementById('edit-camp-modal');
@@ -1536,12 +1536,12 @@
     modal.style.display = 'flex';
   }
 
-  function closeEditCampanha() {
+  window.closeEditCampanha = function closeEditCampanha() {
     const modal = document.getElementById('edit-camp-modal');
     if (modal) modal.style.display = 'none';
   }
 
-  function saveEditCampanha() {
+  window.saveEditCampanha = function saveEditCampanha() {
     const id      = document.getElementById('ec-id').value;
     const nome    = (document.getElementById('ec-nome').value || '').trim();
     const produto = document.getElementById('ec-produto').value || '';
@@ -1758,7 +1758,7 @@
     if (!postsRef) renderPostEmbeds();
   }
 
-  function togglePostEditor() {
+  window.togglePostEditor = function togglePostEditor() {
     const ed = document.getElementById('post-editor');
     if (!ed) return;
     const open = ed.style.display === 'block';
@@ -1772,7 +1772,7 @@
     }
   }
 
-  function savePostLinks() {
+  window.savePostLinks = function savePostLinks() {
     const p1 = (document.getElementById('post-url-1')||{}).value || '';
     const p2 = (document.getElementById('post-url-2')||{}).value || '';
     const p3 = (document.getElementById('post-url-3')||{}).value || '';
@@ -1950,11 +1950,11 @@
     document.getElementById('gerar-abordagem-modal').style.display = 'flex';
   }
 
-  function closeGerarAbordagem() {
+  window.closeGerarAbordagem = function closeGerarAbordagem() {
     document.getElementById('gerar-abordagem-modal').style.display = 'none';
   }
 
-  function selectPublico(tipo) {
+  window.selectPublico = function selectPublico(tipo) {
     gaPublico = tipo;
     ['contador','empresa','bpo'].forEach(t => {
       const btn = document.getElementById('ga-btn-' + t);
@@ -2019,7 +2019,7 @@ Retorne APENAS um JSON válido, sem markdown, sem explicação, neste formato ex
     }
   }
 
-  function copiarTexto(elId) {
+  window.copiarTexto = function copiarTexto(elId) {
     const el = document.getElementById(elId);
     if (!el) return;
     navigator.clipboard.writeText(el.textContent).then(() => {
@@ -2033,7 +2033,7 @@ Retorne APENAS um JSON válido, sem markdown, sem explicação, neste formato ex
   let utmUnlocked = false;
   let utmHistory  = [];
 
-  function checkUtmPin() {
+  window.checkUtmPin = function checkUtmPin() {
     const inp = document.getElementById('utm-pin-input');
     if (inp && inp.value === CORRECT_PIN) {
       utmUnlocked = true;
@@ -2046,7 +2046,7 @@ Retorne APENAS um JSON válido, sem markdown, sem explicação, neste formato ex
     }
   }
 
-  function setUtm(field, value) {
+  window.setUtm = function setUtm(field, value) {
     const el = document.getElementById('utm-' + field);
     if (el) { el.value = value; buildUtm(); }
   }
@@ -2088,7 +2088,7 @@ Retorne APENAS um JSON válido, sem markdown, sem explicação, neste formato ex
     }).join('');
   }
 
-  function copyUtm() {
+  window.copyUtm = function copyUtm() {
     const el = document.getElementById('utm-result');
     if (!el) return;
     navigator.clipboard.writeText(el.textContent).then(function() {
@@ -2097,7 +2097,7 @@ Retorne APENAS um JSON válido, sem markdown, sem explicação, neste formato ex
     });
   }
 
-  function resetUtm() {
+  window.resetUtm = function resetUtm() {
     ['utm-url','utm-source','utm-medium','utm-campaign'].forEach(function(id) {
       const el = document.getElementById(id); if (el) el.value = '';
     });
